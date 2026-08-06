@@ -3,7 +3,8 @@ using ExpenseSplitter.Application.Interfaces.Groups;
 using ExpenseSplitter.Application.Interfaces.Users;
 using ExpenseSplitter.Domain.Entities;
 using ExpenseSplitter.Domain.Entities.Groups;
-using ExpenseSplitter.Domain.Exceptions;
+using ExpenseSplitter.Domain.Exceptions.Group;
+using ExpenseSplitter.Domain.Exceptions.User;
 
 namespace ExpenseSplitter.Application.Services
 {
