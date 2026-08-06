@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ExpenseSplitter.Application": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

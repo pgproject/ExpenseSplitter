@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".env" />
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Project Path="ExpenseSplitter.Api/ExpenseSplitter.Api.csproj" />
+  <Project Path="ExpenseSplitter.Application/ExpenseSplitter.Application.csproj" />
+  <Project Path="ExpenseSplitter.Domain.Tests/ExpenseSplitter.Domain.Tests.csproj" Id="f43d25b7-9418-45dd-9f25-a37dfb149664" />
+  <Project Path="ExpenseSplitter.Domain/ExpenseSplitter.Domain.csproj" />
+  <Project Path="ExpenseSplitter.Infrastructure/ExpenseSplitter.Infrastructure.csproj" />
+</Solution>
