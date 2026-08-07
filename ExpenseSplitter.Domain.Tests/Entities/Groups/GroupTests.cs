@@ -6,6 +6,7 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
 {
     public class GroupTests
     {
+        #region Constructors 
         [Fact]
         public void Constructor_Should_CreateGroupWithOwner()
         {
@@ -45,15 +46,19 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
             });
         }
 
+        #endregion
+
+        #region AddMember
+
         [Fact]
-        public void AddMember_Should_AddNewMember_When_DataIsValid()
+        public void AddMember_Should_AddMember_When_OwnerAddsMember()
         {
             var ownerId = Guid.NewGuid();
 
             Group group = CreateDefaultGroup(ownerId);
 
-            Guid newUserId = Guid.NewGuid();
-            group.AddMember(ownerId, newUserId);
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
 
             Assert.Collection(group.Members, 
                 owner =>
@@ -63,7 +68,7 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
                 },
                 member =>
                 {
-                    Assert.Equal(newUserId, member.UserId);
+                    Assert.Equal(firstMemberId, member.UserId);
                     Assert.Equal(GroupMemberRole.Member, member.Role);
                 });
         }
@@ -75,12 +80,12 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
 
             Group group = CreateDefaultGroup(ownerId);
 
-            Guid newUserId = Guid.NewGuid();
-            group.AddMember(ownerId, newUserId);
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
 
             Assert.Throws<GroupAlreadyContainsMemberException>(() =>
             {
-                group.AddMember(ownerId, newUserId);
+                group.AddMember(ownerId, firstMemberId);
             });
         }
 
@@ -91,8 +96,8 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
 
             Group group = CreateDefaultGroup(ownerId);
 
-            Guid newUserId = Guid.NewGuid();
-            group.AddMember(ownerId, newUserId);
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
 
             Guid secondUserId = Guid.NewGuid();
 
@@ -100,22 +105,22 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
 
             Assert.Throws<OnlyGroupOwnerCanAddMembersException>(() =>
             {
-                group.AddMember(newUserId, secondUserId);
+                group.AddMember(firstMemberId, secondUserId);
             });
         }
 
         [Fact]
-        public void AddMember_Should_AddMember_When_AnyMemberCanAdd()
+        public void AddMember_Should_AddMember_When_MemberAddsMember()
         {
             var ownerId = Guid.NewGuid();
 
             Group group = CreateDefaultGroup(ownerId);
 
-            Guid newUserId = Guid.NewGuid();
-            group.AddMember(ownerId, newUserId);
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
 
             Guid secondUserId = Guid.NewGuid();
-            group.AddMember(newUserId, secondUserId);
+            group.AddMember(firstMemberId, secondUserId);
 
             Assert.Collection(group.Members,
                 owner =>
@@ -125,19 +130,275 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
                 },
                 member =>
                 {
-                    Assert.Equal(newUserId, member.UserId);
+                    Assert.Equal(firstMemberId, member.UserId);
                     Assert.Equal(GroupMemberRole.Member, member.Role);
                 },
                 member =>
                 {
                     Assert.Equal(secondUserId, member.UserId);
                     Assert.Equal(GroupMemberRole.Member, member.Role);
-                }
-                );
-
+                });
         }
 
+        #endregion
+
+        #region RemoveMember
+        [Fact] 
+        public void RemoveMember_Should_RemoveMember_When_OwnerRemovesMember()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
+
+            group.RemoveMember(ownerId, firstMemberId);
+
+            Assert.Single(group.Members);
+            Assert.Collection(group.Members,
+                owner =>
+                {
+                    Assert.Equal(ownerId, owner.UserId);
+                    Assert.Equal(GroupMemberRole.Owner, owner.Role);
+                });
+        }
+
+        [Fact]
+        public void RemoveMember_Should_RemoveMember_When_OnlyOwnerCanRemove()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
+
+            group.Settings.ChangeSettings(false, true);
+            group.RemoveMember(ownerId, firstMemberId);
+
+            Assert.Single(group.Members);
+            Assert.Collection(group.Members,
+                owner =>
+                {
+                    Assert.Equal(ownerId, owner.UserId);
+                    Assert.Equal(GroupMemberRole.Owner, owner.Role);
+                });
+        }
+
+        [Fact]
+        public void RemoveMember_Should_RemoveMember_When_MemberRemovesMember()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
+
+            Guid secondMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, secondMemberId);
+
+            group.Settings.ChangeSettings(true, false);
+
+            group.RemoveMember(firstMemberId, secondMemberId);
+
+            Assert.Collection(group.Members,
+               owner =>
+               {
+                   Assert.Equal(ownerId, owner.UserId);
+                   Assert.Equal(GroupMemberRole.Owner, owner.Role);
+               },
+               member =>
+               {
+                   Assert.Equal(firstMemberId, member.UserId);
+                   Assert.Equal(GroupMemberRole.Member, member.Role);
+               });
+        }
+
+        [Fact]
+        public void RemoveMember_Should_Throw_When_Owner_Remove_Owner()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Assert.Throws<OwnerCannotLeaveGroupException>(() =>
+            {
+                group.RemoveMember(ownerId, ownerId);
+
+            });
+        }
+
+        [Fact]
+        public void RemoveMember_Should_Throw_When_MemberRemovesOwner()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
+
+            Assert.Throws<CannotRemoveGroupOwnerException>(() =>
+            {
+                group.RemoveMember(firstMemberId, ownerId);
+            });
+        }
+
+        [Fact]
+        public void RemoveMember_Should_Throw_When_MemberRemovesMember()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
+
+            Guid secondMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, secondMemberId);
+
+            group.Settings.ChangeSettings(true, true);
+
+            Assert.Throws<OnlyGroupOwnerCanRemoveMembersException>(() =>
+            {
+                group.RemoveMember(firstMemberId, secondMemberId);
+            });
+        }
+
+        [Fact]
+        public void RemoveMember_Should_Throw_When_NonMemberRemovesMember()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
+
+            Guid secondMemberId = Guid.NewGuid();
+
+            Assert.Throws<UserIsNotGroupMemberException>(() =>
+            {
+                group.RemoveMember(secondMemberId, firstMemberId);
+            });
+        }
+
+        [Fact]
+        public void RemoveMember_Should_Throw_When_RemovingUserWhoIsNotGroupMember()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+
+            Assert.Throws<UserIsNotGroupMemberException>(() =>
+            {
+                group.RemoveMember(ownerId, firstMemberId);
+            });
+        }
+        #endregion
+
+        #region ChangeOwnership
+        [Fact] 
+        public void ChangeOwnership_Should_TransferOwnership_When_DataIsValid()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
+
+            group.ChangeOwnership(ownerId, firstMemberId);
+
+            Assert.Collection(group.Members,
+               owner =>
+               {
+                   Assert.Equal(ownerId, owner.UserId);
+                   Assert.Equal(GroupMemberRole.Member, owner.Role);
+               },
+               member =>
+               {
+                   Assert.Equal(firstMemberId, member.UserId);
+                   Assert.Equal(GroupMemberRole.Owner, member.Role);
+            });
+            Assert.Single(group.Members.Where(x => x.Role == GroupMemberRole.Owner));
+        }
+
+        [Fact] 
+        public void ChangeOwnership_Should_Throw_When_Ownership_TransferToOwner()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Assert.Throws<CannotTransferOwnershipToCurrentOwnerException>(() =>
+            {
+                group.ChangeOwnership(ownerId, ownerId);
+            });
+        }
+
+        [Fact]
+        public void ChangeOwnership_Should_Throw_When_Member_TransferOwnership()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
+
+            Guid secondMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, secondMemberId);
+
+            Assert.Throws<OnlyGroupOwnerCanTransferOwnershipException>(() =>
+            {
+                group.ChangeOwnership(firstMemberId, secondMemberId);
+            });
+        }
+
+        [Fact]
+        public void ChangeOwnership_Should_Throw_When_NonMemberTransfersOwnership()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+            group.AddMember(ownerId, firstMemberId);
+
+            Guid secondMemberId = Guid.NewGuid();
+
+            Assert.Throws<UserIsNotGroupMemberException>(() =>
+            {
+                group.ChangeOwnership(secondMemberId, firstMemberId);
+            });
+        }
+
+
+        [Fact]
+        public void ChangeOwnership_Should_Throw_When_NewOwnerIsNotGroupMember()
+        {
+            var ownerId = Guid.NewGuid();
+
+            Group group = CreateDefaultGroup(ownerId);
+
+            Guid firstMemberId = Guid.NewGuid();
+
+            Assert.Throws<UserIsNotGroupMemberException>(() =>
+            {
+                group.ChangeOwnership(ownerId, firstMemberId);
+            });
+        }
+        #endregion
+
+        #region Helpers
         private Group CreateDefaultGroup(Guid ownerId) 
             => new Group("Trip to Italy", ownerId, new GroupSettings());
+
+        #endregion
     }
 }

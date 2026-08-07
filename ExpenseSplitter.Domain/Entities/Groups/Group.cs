@@ -1,5 +1,5 @@
 ﻿using ExpenseSplitter.Domain.Enums;
-using ExpenseSplitter.Domain.Exceptions;
+using ExpenseSplitter.Domain.Exceptions.Group;
 
 namespace ExpenseSplitter.Domain.Entities.Groups
 {
@@ -69,7 +69,7 @@ namespace ExpenseSplitter.Domain.Entities.Groups
 
             GroupMember memberToRemove = GetMemberByIdOrThrow(memberToRemoveId);
 
-            if (IsOwner(memberToRemove))
+            if (member.UserId == memberToRemoveId && IsOwner(member))
             {
                 throw new CannotRemoveGroupOwnerException();
             }
