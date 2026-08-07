@@ -69,7 +69,7 @@ namespace ExpenseSplitter.Domain.Entities.Groups
 
             GroupMember memberToRemove = GetMemberByIdOrThrow(memberToRemoveId);
 
-            if (member.UserId == memberToRemoveId && IsOwner(member))
+            if (IsOwner(memberToRemove))
             {
                 throw new CannotRemoveGroupOwnerException();
             }
