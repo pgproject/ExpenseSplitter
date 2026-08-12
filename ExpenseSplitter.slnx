@@ -4,6 +4,7 @@
     <File Path="docker-compose.yml" />
   </Folder>
   <Project Path="ExpenseSplitter.Api/ExpenseSplitter.Api.csproj" />
+  <Project Path="ExpenseSplitter.Application.Test/ExpenseSplitter.Application.Test.csproj" Id="c77c4a52-9889-41c3-b67a-2e930e2721b7" />
   <Project Path="ExpenseSplitter.Application/ExpenseSplitter.Application.csproj" />
   <Project Path="ExpenseSplitter.Domain.Tests/ExpenseSplitter.Domain.Tests.csproj" Id="f43d25b7-9418-45dd-9f25-a37dfb149664" />
   <Project Path="ExpenseSplitter.Domain/ExpenseSplitter.Domain.csproj" />
