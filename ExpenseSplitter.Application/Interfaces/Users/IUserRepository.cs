@@ -1,4 +1,4 @@
-﻿using ExpenseSplitter.Domain.Entities;
+﻿using ExpenseSplitter.Domain.Entities.User;
 
 namespace ExpenseSplitter.Application.Interfaces.Users
 {

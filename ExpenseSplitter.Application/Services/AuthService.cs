@@ -1,8 +1,8 @@
 ﻿using ExpenseSplitter.Application.DTOs.Authentication;
-using ExpenseSplitter.Domain.Entities;
 using ExpenseSplitter.Application.Interfaces.Authentication;
 using ExpenseSplitter.Application.Interfaces.Users;
 using ExpenseSplitter.Domain.Exceptions.Authentication;
+using ExpenseSplitter.Domain.Entities.User;
 
 namespace ExpenseSplitter.Application.Services
 {

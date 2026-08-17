@@ -1,7 +1,7 @@
-﻿using ExpenseSplitter.Domain.Entities;
-using ExpenseSplitter.Infrastructure.Data;
+﻿using ExpenseSplitter.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using ExpenseSplitter.Application.Interfaces.Users;
+using ExpenseSplitter.Domain.Entities.User;
 
 namespace ExpenseSplitter.Infrastructure.Repositories
 {
@@ -21,7 +21,8 @@ namespace ExpenseSplitter.Infrastructure.Repositories
 
         public Task DeleteAsync(User user)
         {
-            throw new NotImplementedException();
+            _context.Remove(user);
+            return Task.CompletedTask;
         }
 
         public Task<bool> ExistsByEmailAsync(string email)
