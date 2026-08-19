@@ -85,9 +85,25 @@ namespace ExpenseSplitter.Application.Services
             return new ChangeCategoryExpenseNameRequest(expenseCategory.Name, request.newName);
         }
 
-        public Task<RemoveCategoryExpenseRequest> RemoveCategoryExpense(RemoveCategoryExpenseRequest request)
+        public async Task<RemoveCategoryExpenseRequest> RemoveCategoryExpense(RemoveCategoryExpenseRequest request)
         {
-            throw new NotImplementedException();
+            var currentUserId = _currentUserService.UserId;
+            User user = await GetUserOrThrowExceptionAsync(currentUserId);
+            if (!user.UserSettings.CanRemoveExpenseCategory)
+            {
+                throw new ThisUserIsNotAllowedToDeleteExpenseCategoryException();
+            }
+            ExpenseCategory? expenseCategory = await _expenseCategoryRepository.FindByNameAsync(request.categoryName, currentUserId);
+
+            if (expenseCategory == null)
+            {
+                throw new InvalidCategoryExpenseException();
+            }
+
+            await _expenseCategoryRepository.DeleteAsync(expenseCategory);
+            await _expenseCategoryRepository.SaveChangesAsync();
+
+            return new RemoveCategoryExpenseRequest(expenseCategory.Name);
         }
 
         private async Task<User> GetUserOrThrowExceptionAsync(Guid userId)

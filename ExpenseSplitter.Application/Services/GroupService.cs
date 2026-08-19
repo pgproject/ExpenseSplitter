@@ -25,7 +25,7 @@ namespace ExpenseSplitter.Application.Services
         {
             var currentUserId = _currentUserService.UserId;
 
-            Group newGroup = new Group(request.name, _currentUserService.UserId, request.settings);
+            Group newGroup = new Group(request.name, currentUserId, request.settings);
 
             await _groupRepository.AddAsync(newGroup);
             await _groupRepository.SaveChangesAsync();

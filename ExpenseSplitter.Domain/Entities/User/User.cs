@@ -15,7 +15,7 @@ namespace ExpenseSplitter.Domain.Entities.User
         {
             Email = email;
             PasswordHash = passwordHash;
-            UserSettings = new UserSettings(false, true, true);
+            UserSettings = new UserSettings(false, true, true, true);
         }
     }
 }

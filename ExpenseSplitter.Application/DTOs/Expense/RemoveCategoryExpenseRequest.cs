@@ -1,6 +1,6 @@
 ﻿namespace ExpenseSplitter.Application.DTOs.Expense
 {
-    public record RemoveCategoryExpenseRequest(Guid categoryId)
+    public record RemoveCategoryExpenseRequest(string categoryName)
     {
     }
 }
