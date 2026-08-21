@@ -78,11 +78,13 @@ namespace ExpenseSplitter.Application.Services
             {
                 throw new ExpenseCategoryNameAlreadyExistsException();
             }
+            var oldName = expenseCategory.Name;
+
 
             expenseCategory.ChangeName(request.newName);
             await _expenseCategoryRepository.SaveChangesAsync();
 
-            return new ChangeCategoryExpenseNameRequest(expenseCategory.Name, request.newName);
+            return new ChangeCategoryExpenseNameRequest(oldName, request.newName);
         }
 
         public async Task<RemoveCategoryExpenseRequest> RemoveCategoryExpense(RemoveCategoryExpenseRequest request)

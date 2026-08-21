@@ -14,5 +14,13 @@
             CanEditExpenseCategory = canEditExpenseCategory;
             CanRemoveExpenseCategory = canRemoveExpenseCategory;
         }
+
+        public void ChangeUserSettings(UserSettings newSettings)
+        {
+            IsAdmin = newSettings.IsAdmin;
+            CanCreateExpanseCategory = newSettings.CanCreateExpanseCategory;
+            CanEditExpenseCategory = newSettings.CanEditExpenseCategory;
+            CanRemoveExpenseCategory = newSettings.CanRemoveExpenseCategory;
+        }
     }
 }

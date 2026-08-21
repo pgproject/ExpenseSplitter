@@ -114,7 +114,7 @@ namespace ExpenseSplitter.Application.Test
             var result = await _groupService.AddMember(request);
 
             Assert.Equal("hashs", result.newMemberEmail);
-            Assert.Equal(groupId, result.existGroupId);
+            Assert.Equal(group.Id, result.existGroupId);
 
             Assert.Contains(group.Members, member =>
                 member.UserId == user.Id &&
@@ -386,7 +386,7 @@ namespace ExpenseSplitter.Application.Test
             var result = await _groupService.ChangeOwnership(request);
 
             Assert.Equal("newowner@test.com", result.newOwnerOfGroupEmail);
-            Assert.Equal(groupId, result.existGroupId);
+            Assert.Equal(group.Id, result.existGroupId);
 
             Assert.Equal(
                 GroupMemberRole.Member,
