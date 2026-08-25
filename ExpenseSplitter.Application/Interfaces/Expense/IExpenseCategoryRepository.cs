@@ -1,4 +1,4 @@
-﻿using ExpenseSplitter.Domain.Entities.Expense;
+﻿using ExpenseSplitter.Domain.Entities.ExpesneCategory;
 
 namespace ExpenseSplitter.Application.Interfaces.Expense
 {

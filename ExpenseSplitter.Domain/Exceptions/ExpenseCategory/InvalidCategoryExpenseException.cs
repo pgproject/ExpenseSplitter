@@ -1,4 +1,4 @@
-﻿namespace ExpenseSplitter.Domain.Exceptions.Expense.Category
+﻿namespace ExpenseSplitter.Domain.Exceptions.ExpenseCategory
 {
     public class InvalidCategoryExpenseException : Exception
     {

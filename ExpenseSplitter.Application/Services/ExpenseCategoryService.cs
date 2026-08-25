@@ -1,9 +1,9 @@
 ﻿using ExpenseSplitter.Application.DTOs.Expense;
 using ExpenseSplitter.Application.Interfaces.Expense;
 using ExpenseSplitter.Application.Interfaces.Users;
-using ExpenseSplitter.Domain.Entities.Expense;
+using ExpenseSplitter.Domain.Entities.ExpesneCategory;
 using ExpenseSplitter.Domain.Entities.User;
-using ExpenseSplitter.Domain.Exceptions.Expense.Category;
+using ExpenseSplitter.Domain.Exceptions.ExpenseCategory;
 using ExpenseSplitter.Domain.Exceptions.User;
 
 namespace ExpenseSplitter.Application.Services

@@ -1,6 +1,5 @@
 ﻿using ExpenseSplitter.Application.Interfaces.Expense;
-using ExpenseSplitter.Domain.Entities.Expense;
-using ExpenseSplitter.Domain.Entities.User;
+using ExpenseSplitter.Domain.Entities.ExpesneCategory;
 using ExpenseSplitter.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

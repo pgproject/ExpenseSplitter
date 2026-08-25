@@ -1,5 +1,5 @@
-﻿using ExpenseSplitter.Domain.Entities.Expense;
-using ExpenseSplitter.Domain.Exceptions.Expense.Category;
+﻿using ExpenseSplitter.Domain.Entities.ExpesneCategory;
+using ExpenseSplitter.Domain.Exceptions.ExpenseCategory;
 
 namespace ExpenseSplitter.Domain.Tests.Entities.Expense
 {

@@ -1,4 +1,4 @@
-﻿using ExpenseSplitter.Domain.Entities.Expense;
+﻿using ExpenseSplitter.Domain.Entities.ExpesneCategory;
 using ExpenseSplitter.Domain.Entities.Groups;
 using ExpenseSplitter.Domain.Entities.User;
 using ExpenseSplitter.Infrastructure.Configurations;
