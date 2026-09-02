@@ -1,5 +1,5 @@
-﻿using ExpenseSplitter.Application.Interfaces.Expense;
-using ExpenseSplitter.Domain.Entities.ExpesneCategory;
+﻿using ExpenseSplitter.Application.Interfaces;
+using ExpenseSplitter.Domain.Entities;
 using ExpenseSplitter.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

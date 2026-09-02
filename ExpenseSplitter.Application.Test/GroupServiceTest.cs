@@ -35,7 +35,7 @@ namespace ExpenseSplitter.Application.Test
 
             _currentUserServiceMock.Setup(x => x.UserId).Returns(ownerId);
 
-            var request = new CreateGroupRequest("Trip to Italy", new GroupSettings());
+            var request = new CreateGroupRequest("Trip to Italy", new GroupSettings(Currency.PLN));
             
             var result = await _groupService.CreateAsync(request);
 
@@ -54,7 +54,7 @@ namespace ExpenseSplitter.Application.Test
         [Fact]
         public async Task CreateAsync_Should_Throw_When_NameIsEmpty()
         {
-            var request = new CreateGroupRequest("", new GroupSettings());
+            var request = new CreateGroupRequest("", new GroupSettings(Currency.PLN));
 
             await Assert.ThrowsAsync<InvalidGroupNameException>(() =>
                  _groupService.CreateAsync(request));
@@ -91,7 +91,7 @@ namespace ExpenseSplitter.Application.Test
             var group = new Group(
                 "Trip to Italy",
                 ownerId,
-                new GroupSettings());
+                new GroupSettings(Currency.PLN));
 
             var user = new User(
                 "hashs",
@@ -174,7 +174,7 @@ namespace ExpenseSplitter.Application.Test
             var group = new Group(
                 "Trip to Italy",
                 ownerId,
-                new GroupSettings());
+                new GroupSettings(Currency.PLN));
 
             _currentUserServiceMock
                 .Setup(x => x.UserId)
@@ -216,7 +216,7 @@ namespace ExpenseSplitter.Application.Test
             var group = new Group(
                 "Trip to Italy",
                 ownerId,
-                new GroupSettings());
+                new GroupSettings(Currency.PLN));
 
             var user = new User(
                 "hashs",
@@ -262,11 +262,11 @@ namespace ExpenseSplitter.Application.Test
             var group = new Group(
                 "Trip to Italy",
                 ownerId,
-                new GroupSettings());
+                new GroupSettings(Currency.PLN));
 
             group.AddMember(ownerId, currentUserId);
 
-            group.Settings.ChangeSettings(true, false);
+            group.Settings.ChangeSettings(true, false, Currency.PLN);
 
             var user = new User(
                 "hashs",
@@ -311,7 +311,7 @@ namespace ExpenseSplitter.Application.Test
             var group = new Group(
                 "Trip to Italy",
                 ownerId,
-                new GroupSettings());
+                new GroupSettings(Currency.PLN));
 
 
             var user = new User(
@@ -359,7 +359,7 @@ namespace ExpenseSplitter.Application.Test
             var group = new Group(
                 "Trip to Italy",
                 currentOwnerId,
-                new GroupSettings());
+                new GroupSettings(Currency.PLN));
 
             var user = new User(
                 "newowner@test.com",
@@ -447,7 +447,7 @@ namespace ExpenseSplitter.Application.Test
             var group = new Group(
                 "Trip to Italy",
                 currentOwnerId,
-                new GroupSettings());
+                new GroupSettings(Currency.PLN));
 
             _currentUserServiceMock
                 .Setup(x => x.UserId)
@@ -491,7 +491,7 @@ namespace ExpenseSplitter.Application.Test
             var group = new Group(
                 "Trip to Italy",
                 ownerId,
-                new GroupSettings());
+                new GroupSettings(Currency.PLN));
 
             group.AddMember(ownerId, memberId);
 
@@ -541,7 +541,7 @@ namespace ExpenseSplitter.Application.Test
             var group = new Group(
                 "Trip to Italy",
                 ownerId,
-                new GroupSettings());
+                new GroupSettings(Currency.PLN));
 
             var user = new User(
                 "owner@test.com",
@@ -590,7 +590,7 @@ namespace ExpenseSplitter.Application.Test
             var group = new Group(
                 "Trip to Italy",
                 ownerId,
-                new GroupSettings());
+                new GroupSettings(Currency.PLN));
 
             var user = new User(
                 "newowner@test.com",

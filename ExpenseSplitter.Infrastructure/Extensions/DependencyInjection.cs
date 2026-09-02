@@ -10,6 +10,10 @@ using ExpenseSplitter.Infrastructure.Data;
 using ExpenseSplitter.Infrastructure.Repositories;
 using ExpenseSplitter.Infrastructure.Security;
 using System.Text;
+using ExpenseSplitter.Application.Interfaces.Groups;
+using ExpenseSplitter.Application.Interfaces;
+using ExpenseSplitter.Application.Services;
+using ExpenseSplitter.Application.Interfaces.Expense;
 
 namespace ExpenseSplitter.Infrastructure.Extensions
 {
@@ -30,6 +34,15 @@ namespace ExpenseSplitter.Infrastructure.Extensions
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<IPasswordHasher, IdentityPasswordHasher>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IGroupService, GroupService>();
+
+            services.AddScoped<IExpenseCategoryRepository, ExpenseCategoryRepository>();
+            services.AddScoped<IExpenseCategoryService, ExpenseCategoryService>();
+
+            services.AddScoped<IExpenseRepository, ExpenseRepository>();
+            services.AddScoped<IExpenseService, ExpenseService>();
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();

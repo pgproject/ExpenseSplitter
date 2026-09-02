@@ -1,10 +1,11 @@
-﻿using ExpenseSplitter.Application.DTOs.Expense;
-using ExpenseSplitter.Application.Interfaces.Expense;
+﻿using ExpenseSplitter.Application.DTOs.ExpenseCategory;
+using ExpenseSplitter.Application.Interfaces;
 using ExpenseSplitter.Application.Interfaces.Users;
 using ExpenseSplitter.Application.Services;
-using ExpenseSplitter.Domain.Entities.Expense;
+using ExpenseSplitter.Domain.Entities;
 using ExpenseSplitter.Domain.Entities.User;
-using ExpenseSplitter.Domain.Exceptions.Expense.Category;
+using ExpenseSplitter.Domain.Enums;
+using ExpenseSplitter.Domain.Exceptions.ExpenseCategory;
 using ExpenseSplitter.Domain.Exceptions.User;
 using Moq;
 
@@ -110,7 +111,7 @@ namespace ExpenseSplitter.Application.Test
             user.Id = userId;
 
             user.UserSettings.ChangeUserSettings(
-                new UserSettings(false, false, true, true));
+                new UserSettings(false, false, true, true, Currency.PLN));
 
             _currentUserServiceMock
                 .Setup(x => x.UserId)
@@ -286,7 +287,7 @@ namespace ExpenseSplitter.Application.Test
             user.Id = userId;
 
             user.UserSettings.ChangeUserSettings(
-                new UserSettings(false, true, false, true));
+                new UserSettings(false, true, false, true, Currency.PLN));
 
             _currentUserServiceMock
                 .Setup(x => x.UserId)
@@ -542,7 +543,7 @@ namespace ExpenseSplitter.Application.Test
             user.Id = userId;
 
             user.UserSettings.ChangeUserSettings(
-                new UserSettings(false, true, true, false));
+                new UserSettings(false, true, true, false, Currency.PLN));
 
             _currentUserServiceMock
                 .Setup(x => x.UserId)

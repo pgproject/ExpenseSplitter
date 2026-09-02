@@ -1,7 +1,7 @@
-﻿using ExpenseSplitter.Application.DTOs.Expense;
-using ExpenseSplitter.Application.Interfaces.Expense;
+﻿using ExpenseSplitter.Application.DTOs.ExpenseCategory;
+using ExpenseSplitter.Application.Interfaces;
 using ExpenseSplitter.Application.Interfaces.Users;
-using ExpenseSplitter.Domain.Entities.ExpesneCategory;
+using ExpenseSplitter.Domain.Entities;
 using ExpenseSplitter.Domain.Entities.User;
 using ExpenseSplitter.Domain.Exceptions.ExpenseCategory;
 using ExpenseSplitter.Domain.Exceptions.User;
@@ -24,7 +24,7 @@ namespace ExpenseSplitter.Application.Services
         {
             var currentUserId = _currentUserService.UserId;
             User user = await GetUserOrThrowExceptionAsync(currentUserId);
-            if (!user.UserSettings.CanCreateExpanseCategory)
+            if (!user.UserSettings.CanCreateExpenseCategory)
             {
                 throw new ThisUserIsNotAllowedToCreateExpenseCategoryException();
             }

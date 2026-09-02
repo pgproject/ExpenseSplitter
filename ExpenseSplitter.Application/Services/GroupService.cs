@@ -24,8 +24,10 @@ namespace ExpenseSplitter.Application.Services
         public async Task<CreateGroupRequest> CreateAsync(CreateGroupRequest request)
         {
             var currentUserId = _currentUserService.UserId;
+            User user = await GetUserOrThrowExceptionAsync(currentUserId);
 
             Group newGroup = new Group(request.name, currentUserId, request.settings);
+            newGroup.Settings.SetDefaultCurrency(user.UserSettings.DefaultUserCurrency);
 
             await _groupRepository.AddAsync(newGroup);
             await _groupRepository.SaveChangesAsync();
@@ -90,6 +92,18 @@ namespace ExpenseSplitter.Application.Services
             if (user == null)
             {
                 throw new UserNotFoundException(userEmail);
+            }
+
+            return user;
+        }
+
+        private async Task<User> GetUserOrThrowExceptionAsync(Guid userId)
+        {
+            User? user = await _userRepository.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new UserNotFoundException(userId.ToString());
             }
 
             return user;

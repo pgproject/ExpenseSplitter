@@ -1,6 +1,6 @@
-﻿using ExpenseSplitter.Application.DTOs.Expense;
+﻿using ExpenseSplitter.Application.DTOs.ExpenseCategory;
 
-namespace ExpenseSplitter.Application.Interfaces.Expense
+namespace ExpenseSplitter.Application.Interfaces
 {
     public interface IExpenseCategoryService
     {

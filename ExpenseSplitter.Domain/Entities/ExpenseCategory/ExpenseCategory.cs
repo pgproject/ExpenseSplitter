@@ -1,6 +1,6 @@
 ﻿using ExpenseSplitter.Domain.Exceptions.ExpenseCategory;
 
-namespace ExpenseSplitter.Domain.Entities.ExpesneCategory
+namespace ExpenseSplitter.Domain.Entities
 {
     public class ExpenseCategory
     {
