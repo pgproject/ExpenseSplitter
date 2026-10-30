@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using ExpenseSplitter.Application.Interfaces.Authentication;
-using ExpenseSplitter.Domain.Entities;
+using ExpenseSplitter.Domain.Entities.User;
 
 namespace ExpenseSplitter.Infrastructure.Security
 {

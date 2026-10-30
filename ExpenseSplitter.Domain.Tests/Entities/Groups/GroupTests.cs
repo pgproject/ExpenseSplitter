@@ -27,7 +27,7 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
         {
             var ownerId = Guid.NewGuid();
 
-            var settings = new GroupSettings();
+            var settings = new GroupSettings(Currency.PLN);
 
             Assert.Throws<InvalidGroupNameException>(() =>
             {
@@ -101,7 +101,7 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
 
             Guid secondUserId = Guid.NewGuid();
 
-            group.Settings.ChangeSettings(true, false);
+            group.Settings.ChangeSettings(true, false, Currency.PLN);
 
             Assert.Throws<OnlyGroupOwnerCanAddMembersException>(() =>
             {
@@ -174,7 +174,7 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
             Guid firstMemberId = Guid.NewGuid();
             group.AddMember(ownerId, firstMemberId);
 
-            group.Settings.ChangeSettings(false, true);
+            group.Settings.ChangeSettings(false, true, Currency.PLN);
             group.RemoveMember(ownerId, firstMemberId);
 
             Assert.Single(group.Members);
@@ -199,7 +199,7 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
             Guid secondMemberId = Guid.NewGuid();
             group.AddMember(ownerId, secondMemberId);
 
-            group.Settings.ChangeSettings(true, false);
+            group.Settings.ChangeSettings(true, false, Currency.PLN);
 
             group.RemoveMember(firstMemberId, secondMemberId);
 
@@ -259,7 +259,7 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
             Guid secondMemberId = Guid.NewGuid();
             group.AddMember(ownerId, secondMemberId);
 
-            group.Settings.ChangeSettings(true, true);
+            group.Settings.ChangeSettings(true, true, Currency.PLN);
 
             Assert.Throws<OnlyGroupOwnerCanRemoveMembersException>(() =>
             {
@@ -397,7 +397,7 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
 
         #region Helpers
         private Group CreateDefaultGroup(Guid ownerId) 
-            => new Group("Trip to Italy", ownerId, new GroupSettings());
+            => new Group("Trip to Italy", ownerId, new GroupSettings(Currency.PLN));
 
         #endregion
     }

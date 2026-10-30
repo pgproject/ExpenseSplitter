@@ -1,14 +1,33 @@
-﻿namespace ExpenseSplitter.Domain.Entities.Groups
+﻿using ExpenseSplitter.Domain.Enums;
+
+namespace ExpenseSplitter.Domain.Entities.Groups
 {
     public class GroupSettings
     {
         public bool OnlyOwnerCanAddMember { get; private set; } = false;
         public bool OnlyOwnerCanRemoveMember { get; private set; } = false;
 
-        public void ChangeSettings(bool onlyOnwerCanAddMember, bool onlyOwnerCanRemoveMember)
+        public Currency DefaultCurrency { get; private set; }
+
+        private GroupSettings()
         {
-            OnlyOwnerCanAddMember = onlyOnwerCanAddMember;
+        }
+
+        public GroupSettings(Currency defaultCurrency)
+        {
+            SetDefaultCurrency(defaultCurrency);
+        }
+
+        public void SetDefaultCurrency(Currency currency)
+        {
+            DefaultCurrency = currency;
+        }
+
+        public void ChangeSettings(bool onlyOwnerCanAddMember, bool onlyOwnerCanRemoveMember, Currency newDefaultCurrency)
+        {
+            OnlyOwnerCanAddMember = onlyOwnerCanAddMember;
             OnlyOwnerCanRemoveMember = onlyOwnerCanRemoveMember;
+            DefaultCurrency = newDefaultCurrency;
         }
     }
 }

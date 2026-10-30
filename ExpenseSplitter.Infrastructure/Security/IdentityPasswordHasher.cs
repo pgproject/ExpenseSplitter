@@ -1,6 +1,6 @@
-﻿using ExpenseSplitter.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using ExpenseSplitter.Application.Interfaces.Authentication;
+using ExpenseSplitter.Domain.Entities.User;
 
 
 namespace ExpenseSplitter.Infrastructure.Security

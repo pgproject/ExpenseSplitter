@@ -13,6 +13,15 @@ namespace ExpenseSplitter.Infrastructure.Configurations
                 settings.Property(x => x.OnlyOwnerCanAddMember);
                 settings.Property(x => x.OnlyOwnerCanRemoveMember);
             });
+
+            builder.HasMany(x => x.Members)
+                .WithOne()
+                .HasForeignKey(x => x.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Navigation(x => x.Members)
+                .HasField("_members")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }
