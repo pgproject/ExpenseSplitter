@@ -15,7 +15,7 @@ namespace ExpenseSplitter.Infrastructure.Tests.Repositories
         {
             // Arrange
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseNpgsql("YOUR_TEST_DATABASE_CONNECTION_STRING")
+                .UseNpgsql(TestDatabaseConfiguration.ConnectionString)
                 .Options;
 
             var ownerId = Guid.NewGuid();
@@ -35,6 +35,7 @@ namespace ExpenseSplitter.Infrastructure.Tests.Repositories
             // Act
             await using (var context = new AppDbContext(options))
             {
+                await context.Database.MigrateAsync();
                 await context.Groups.AddAsync(group);
                 await context.SaveChangesAsync();
             }

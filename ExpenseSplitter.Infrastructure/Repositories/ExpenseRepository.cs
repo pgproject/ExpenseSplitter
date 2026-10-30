@@ -49,7 +49,7 @@ namespace ExpenseSplitter.Infrastructure.Repositories
         public Task<List<Expense>> FindByNameAsync(string name)
         {
             return _dbContext.Expenses
-                .Where(x => x.Name.Contains(name))
+                .Where(x => EF.Functions.ILike(x.Name, $"%{name}%"))
                 .ToListAsync();
         }
 

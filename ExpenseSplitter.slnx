@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".env" />
+    <File Path=".env.test" />
     <File Path="docker-compose.yml" />
   </Folder>
   <Project Path="ExpenseSplitter.Api/ExpenseSplitter.Api.csproj" />
