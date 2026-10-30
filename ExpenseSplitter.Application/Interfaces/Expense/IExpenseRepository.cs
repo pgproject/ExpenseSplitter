@@ -4,7 +4,7 @@ namespace ExpenseSplitter.Application.Interfaces;
 
 public interface IExpenseRepository
 {
-    Task<Expense> FindByIdAsync(Guid id);
+    Task<Expense?> FindByIdAsync(Guid id);
     Task<List<Expense>> FindByNameAsync(string name);
     Task<List<Expense>> FindAllForGroup(Guid groupId);
     Task<List<Expense>> FindAllAddedByUser(Guid userId);

@@ -27,7 +27,7 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
         {
             var ownerId = Guid.NewGuid();
 
-            var settings = new GroupSettings();
+            var settings = new GroupSettings(Currency.PLN);
 
             Assert.Throws<InvalidGroupNameException>(() =>
             {
@@ -397,7 +397,7 @@ namespace ExpenseSplitter.Domain.Tests.Entities.Groups
 
         #region Helpers
         private Group CreateDefaultGroup(Guid ownerId) 
-            => new Group("Trip to Italy", ownerId, new GroupSettings());
+            => new Group("Trip to Italy", ownerId, new GroupSettings(Currency.PLN));
 
         #endregion
     }

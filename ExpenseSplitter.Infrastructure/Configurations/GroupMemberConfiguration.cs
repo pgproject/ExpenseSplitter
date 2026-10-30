@@ -9,7 +9,7 @@ namespace ExpenseSplitter.Infrastructure.Configurations
         public void Configure(EntityTypeBuilder<GroupMember> builder)
         {
             builder.HasKey(x => new { x.GroupId, x.UserId });
+
         }
     }
 }
-

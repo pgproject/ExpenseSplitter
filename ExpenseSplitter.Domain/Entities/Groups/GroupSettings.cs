@@ -9,14 +9,23 @@ namespace ExpenseSplitter.Domain.Entities.Groups
 
         public Currency DefaultCurrency { get; private set; }
 
+        private GroupSettings()
+        {
+        }
+
+        public GroupSettings(Currency defaultCurrency)
+        {
+            SetDefaultCurrency(defaultCurrency);
+        }
+
         public void SetDefaultCurrency(Currency currency)
         {
             DefaultCurrency = currency;
         }
 
-        public void ChangeSettings(bool onlyOnwerCanAddMember, bool onlyOwnerCanRemoveMember, Currency newDefaultCurrency)
+        public void ChangeSettings(bool onlyOwnerCanAddMember, bool onlyOwnerCanRemoveMember, Currency newDefaultCurrency)
         {
-            OnlyOwnerCanAddMember = onlyOnwerCanAddMember;
+            OnlyOwnerCanAddMember = onlyOwnerCanAddMember;
             OnlyOwnerCanRemoveMember = onlyOwnerCanRemoveMember;
             DefaultCurrency = newDefaultCurrency;
         }

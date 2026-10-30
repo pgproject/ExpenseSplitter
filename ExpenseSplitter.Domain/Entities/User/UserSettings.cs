@@ -11,6 +11,9 @@ namespace ExpenseSplitter.Domain.Entities.User
         public bool CanRemoveExpenseCategory { get; private set; }
         public Currency DefaultUserCurrency { get; private set; }
 
+        private UserSettings()
+        {
+        }
         public UserSettings(bool isAdmin, bool canCreateExpenseCategory, bool canEditExpenseCategory, bool canRemoveExpenseCategory, Currency currency)
         {
             IsAdmin = isAdmin;

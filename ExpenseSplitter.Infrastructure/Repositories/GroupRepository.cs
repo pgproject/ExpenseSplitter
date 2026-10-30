@@ -1,6 +1,7 @@
 ﻿using ExpenseSplitter.Application.Interfaces.Groups;
 using ExpenseSplitter.Domain.Entities.Groups;
 using ExpenseSplitter.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseSplitter.Infrastructure.Repositories
 {
@@ -8,7 +9,7 @@ namespace ExpenseSplitter.Infrastructure.Repositories
     {
         private readonly AppDbContext _context;
 
-        private GroupRepository(AppDbContext context)
+        public GroupRepository(AppDbContext context)
         {
             _context = context;
         }
@@ -24,7 +25,9 @@ namespace ExpenseSplitter.Infrastructure.Repositories
 
         public Task<Group?> FindByIdAsync(Guid groupId)
         {
-            return _context.Groups.FindAsync(groupId).AsTask();
+            return _context.Groups
+                .Include(x => x.Members)
+                .FirstOrDefaultAsync(x => x.Id == groupId);
         }
 
         public async Task SaveChangesAsync()

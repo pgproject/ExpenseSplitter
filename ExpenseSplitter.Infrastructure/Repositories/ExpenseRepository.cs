@@ -1,6 +1,5 @@
 ﻿using ExpenseSplitter.Application.Interfaces;
 using ExpenseSplitter.Domain.Entities;
-using ExpenseSplitter.Domain.Entities.User;
 using ExpenseSplitter.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,33 +27,41 @@ namespace ExpenseSplitter.Infrastructure.Repositories
 
         public Task<List<Expense>> FindAllAddedByUser(Guid userId)
         {
-            return _dbContext.Expenses.Where(x => x.UserIdAdded == userId).ToListAsync();
+            return _dbContext.Expenses
+                .Where(x => x.UserIdAdded == userId)
+                .ToListAsync();
         }
 
         public Task<List<Expense>> FindAllForGroup(Guid groupId)
         {
-            return _dbContext.Expenses.Where(x => x.UserIdAdded == userId).ToListAsync();
-
+            return _dbContext.Expenses
+                .Where(x => x.ExpenseAllocations.Any(a => a.GroupId == groupId))
+                .ToListAsync();
         }
 
-        public Task<Expense> FindByIdAsync(Guid id)
+        public Task<Expense?> FindByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return _dbContext.Expenses
+                .Include(x => x.ExpenseAllocations)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public Task<List<Expense>> FindByNameAsync(string name)
         {
-            throw new NotImplementedException();
+            return _dbContext.Expenses
+                .Where(x => x.Name.Contains(name))
+                .ToListAsync();
         }
 
         public Task SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            return _dbContext.SaveChangesAsync();
         }
 
         public Task UpdateAsync(Expense expense)
         {
-            throw new NotImplementedException();
+            _dbContext.Expenses.Update(expense);
+            return Task.CompletedTask;
         }
     }
 }

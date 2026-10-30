@@ -13,7 +13,7 @@ namespace ExpenseSplitter.Infrastructure.Data
         public DbSet<ExpenseCategory> ExpenseCategory { get; set; } = null!;
         public DbSet<Expense> Expenses { get; set; } = null!;
 
-        public AppDbContext(DbContextOptions options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 

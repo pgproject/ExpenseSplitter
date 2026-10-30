@@ -32,53 +32,99 @@ namespace ExpenseSplitter.Application.Test
         public async Task CreateAsync_Should_CreateGroup_When_RequestIsValid()
         {
             var ownerId = Guid.NewGuid();
+            var user = new User("test@example.com", "password")
+            {
+                Id = ownerId
+            };
 
-            _currentUserServiceMock.Setup(x => x.UserId).Returns(ownerId);
+            _currentUserServiceMock
+                .Setup(x => x.UserId)
+                .Returns(ownerId);
 
-            var request = new CreateGroupRequest("Trip to Italy", new GroupSettings(Currency.PLN));
-            
+            _userRepositoryMock
+                .Setup(x => x.FindByIdAsync(ownerId))
+                .ReturnsAsync(user);
+
+            var request = new CreateGroupRequest(
+                "Trip to Italy",
+                new GroupSettings(Currency.PLN));
+
             var result = await _groupService.CreateAsync(request);
 
             Assert.Equal(request.name, result.name);
 
-            _groupRepositoryMock.Verify(x => x.AddAsync(It.Is<Group>(group => 
-                group.Name == request.name && 
+            _groupRepositoryMock.Verify(x => x.AddAsync(It.Is<Group>(group =>
+                group.Name == request.name &&
                 group.Members.Single().UserId == ownerId &&
                 group.Members.Single().Role == GroupMemberRole.Owner)),
                 Times.Once);
 
-            _groupRepositoryMock.Verify(x => x.SaveChangesAsync(),
+            _groupRepositoryMock.Verify(
+                x => x.SaveChangesAsync(),
                 Times.Once);
         }
 
         [Fact]
         public async Task CreateAsync_Should_Throw_When_NameIsEmpty()
         {
-            var request = new CreateGroupRequest("", new GroupSettings(Currency.PLN));
+            var userId = Guid.NewGuid();
+            var user = new User("test@example.com", "password")
+            {
+                Id = userId
+            };
 
-            await Assert.ThrowsAsync<InvalidGroupNameException>(() =>
-                 _groupService.CreateAsync(request));
+            _currentUserServiceMock
+                .Setup(x => x.UserId)
+                .Returns(userId);
 
-            _groupRepositoryMock.Verify(x => x.AddAsync(It.IsAny<Group>()),
+            _userRepositoryMock
+                .Setup(x => x.FindByIdAsync(userId))
+                .ReturnsAsync(user);
+
+            var request = new CreateGroupRequest(
+                "",
+                new GroupSettings(Currency.PLN));
+
+            await Assert.ThrowsAsync<InvalidGroupNameException>(
+                () => _groupService.CreateAsync(request));
+
+            _groupRepositoryMock.Verify(
+                x => x.AddAsync(It.IsAny<Group>()),
                 Times.Never);
 
-            _groupRepositoryMock.Verify(x => x.SaveChangesAsync(),
+            _groupRepositoryMock.Verify(
+                x => x.SaveChangesAsync(),
                 Times.Never);
         }
-
 
         [Fact]
         public async Task CreateAsync_Should_Throw_When_SettingsIsNull()
         {
+            var userId = Guid.NewGuid();
+            var user = new User("test@example.com", "password")
+            {
+                Id = userId
+            };
+
+            _currentUserServiceMock
+                .Setup(x => x.UserId)
+                .Returns(userId);
+
+            _userRepositoryMock
+                .Setup(x => x.FindByIdAsync(userId))
+                .ReturnsAsync(user);
+
             var request = new CreateGroupRequest("Italy", null!);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                 _groupService.CreateAsync(request));
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                () => _groupService.CreateAsync(request));
 
-            _groupRepositoryMock.Verify(x => x.AddAsync(It.IsAny<Group>()),
+            _groupRepositoryMock.Verify(
+                x => x.AddAsync(It.IsAny<Group>()),
                 Times.Never);
 
-            _groupRepositoryMock.Verify(x => x.SaveChangesAsync(),
+            _groupRepositoryMock.Verify(
+                x => x.SaveChangesAsync(),
                 Times.Never);
         }
 

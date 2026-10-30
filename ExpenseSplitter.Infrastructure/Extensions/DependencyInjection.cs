@@ -13,7 +13,6 @@ using System.Text;
 using ExpenseSplitter.Application.Interfaces.Groups;
 using ExpenseSplitter.Application.Interfaces;
 using ExpenseSplitter.Application.Services;
-using ExpenseSplitter.Application.Interfaces.Expense;
 
 namespace ExpenseSplitter.Infrastructure.Extensions
 {
