@@ -127,6 +127,19 @@ namespace ExpenseSplitter.Application.Services
             )).ToList();
         }
 
+        public async Task ValidateCategoryAccessAsync(Guid categoryId)
+        {
+            var currentUserId = _currentUserService.UserId;
+
+            ExpenseCategory? category =
+                await _expenseCategoryRepository.FindByIdAsync(categoryId);
+
+            if (category == null ||
+                (!category.IsPublic && category.UserId != currentUserId))
+            {
+                throw new InvalidCategoryExpenseException();
+            }
+        }
 
         private async Task<User> GetUserOrThrowExceptionAsync(Guid userId)
         {
@@ -139,7 +152,5 @@ namespace ExpenseSplitter.Application.Services
 
             return user;
         }
-
-        
     }
 }

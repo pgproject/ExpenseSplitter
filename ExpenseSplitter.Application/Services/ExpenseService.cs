@@ -26,6 +26,8 @@ namespace ExpenseSplitter.Application.Services
             var expenseId = Guid.NewGuid();
             var userId = _currentUserService.UserId;
 
+            await _expenseCategoryService.ValidateCategoryAccessAsync(request.categoryId);
+
             if (!request.currency.HasValue ||
                 !Enum.IsDefined(request.currency.Value))
             {
@@ -72,6 +74,8 @@ namespace ExpenseSplitter.Application.Services
             {
                 throw new UserIsNotExpenseOwnerException();
             }
+
+            await _expenseCategoryService.ValidateCategoryAccessAsync(request.categoryId);
 
             expense.Update(
                 request.newName,

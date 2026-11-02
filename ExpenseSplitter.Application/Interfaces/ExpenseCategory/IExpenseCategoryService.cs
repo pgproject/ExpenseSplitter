@@ -9,5 +9,6 @@ namespace ExpenseSplitter.Application.Interfaces
         Task<UpdateExpenseCategoryResponse> UpdateCategoryExpense(UpdateExpenseCategoryRequest request);
         Task<RemoveExpenseCategoryResponse> RemoveCategoryExpense(RemoveCategoryExpenseRequest request);
         Task<List<GetExpenseCategoriesResponse>> GetAllAsync();
+        Task ValidateCategoryAccessAsync(Guid categoryId);
     }
 }

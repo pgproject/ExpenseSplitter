@@ -135,6 +135,5 @@ namespace ExpenseSplitter.Domain.Entities.Groups
 
             _members.Add(newMember);
         }
-
     }
 }
