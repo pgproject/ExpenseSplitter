@@ -59,10 +59,10 @@ namespace ExpenseSplitter.Domain.Entities
             }
             Amount = amount;
 
-            var expenseDate = date ?? DateTime.Now;
+            var expenseDate = date ?? DateTime.UtcNow;
 
             ValidateDate(expenseDate);
-            Date = expenseDate;
+            Date = DateTime.SpecifyKind(expenseDate, DateTimeKind.Utc);
         }
 
         public void Update(string? newName, decimal? newAmount, Guid? newCategoryId, DateTime? newDate, Currency newCurrency)
@@ -104,7 +104,7 @@ namespace ExpenseSplitter.Domain.Entities
 
             if (newDate.HasValue)
             {
-                Date = newDate.Value;
+                Date = DateTime.SpecifyKind(newDate.Value, DateTimeKind.Utc);
             }
 
             Currency = newCurrency;
@@ -124,7 +124,7 @@ namespace ExpenseSplitter.Domain.Entities
 
         private static void ValidateDate(DateTime date)
         {
-            if (date.Date > DateTime.Now.Date)
+            if (date.Date > DateTime.UtcNow.Date)
             {
                 throw new InvalidExpenseDateException();
             }

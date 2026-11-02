@@ -85,6 +85,67 @@ namespace ExpenseSplitter.Application.Services
             return new ChangeOwnershipResponse(user.Email, group.Id);
         }
 
+        public async Task<List<GetGroupsResponse>> GetAllAsync()
+        {
+            var currentUserId = _currentUserService.UserId;
+
+            List<Group> groups = await _groupRepository.FindAllForUserAsync(
+                currentUserId);
+
+            return groups.Select(group =>
+            {
+                GroupMember currentMember = group.Members
+                    .First(member => member.UserId == currentUserId);
+
+                return new GetGroupsResponse(
+                    group.Id,
+                    group.Name,
+                    currentMember.Role.ToString(),
+                    group.Members.Count
+                );
+            }).ToList();
+        }
+
+        public async Task<GetGroupDetailsResponse> GetByIdAsync(Guid groupId)
+        {
+            var currentUserId = _currentUserService.UserId;
+
+            Group group = await GetGroupOrThrowExceptionAsync(groupId);
+
+            if (!group.Members.Any(member => member.UserId == currentUserId))
+            {
+                throw new UserIsNotGroupMemberException();
+            }
+
+            var members = new List<GroupMemberResponse>();
+
+            foreach (var member in group.Members)
+            {
+                User user = await GetUserOrThrowExceptionAsync(member.UserId);
+
+                members.Add(new GroupMemberResponse(
+                    user.Id,
+                    user.Email,
+                    member.Role.ToString()
+                ));
+            }
+
+            var owner = group.Members.First(member =>
+                member.Role == ExpenseSplitter.Domain.Enums.GroupMemberRole.Owner);
+
+            return new GetGroupDetailsResponse(
+                group.Id,
+                group.Name,
+                owner.UserId,
+                members,
+                new GroupSettingsResponse(
+                    group.Settings.OnlyOwnerCanAddMember,
+                    group.Settings.OnlyOwnerCanRemoveMember,
+                    group.Settings.DefaultCurrency
+                )
+            );
+        }
+
         private async Task<Group> GetGroupOrThrowExceptionAsync(Guid gruopId)
         {
             Group? group = await _groupRepository.FindByIdAsync(gruopId);

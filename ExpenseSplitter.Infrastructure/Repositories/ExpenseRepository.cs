@@ -63,5 +63,15 @@ namespace ExpenseSplitter.Infrastructure.Repositories
             _dbContext.Expenses.Update(expense);
             return Task.CompletedTask;
         }
+
+        public Task<List<Expense>> FindAllForUserAsync(Guid userId)
+        {
+                return _dbContext.Expenses
+            .Include(x => x.ExpenseAllocations)
+            .Where(x => x.UserIdAdded == userId)
+            .OrderByDescending(x => x.Date)
+            .Take(10)
+            .ToListAsync();
+        }
     }
 }

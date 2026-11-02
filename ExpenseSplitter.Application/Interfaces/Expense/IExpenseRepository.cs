@@ -8,6 +8,7 @@ public interface IExpenseRepository
     Task<List<Expense>> FindByNameAsync(string name);
     Task<List<Expense>> FindAllForGroup(Guid groupId);
     Task<List<Expense>> FindAllAddedByUser(Guid userId);
+    Task<List<Expense>> FindAllForUserAsync(Guid userId);
     Task AddAsync(Expense expense);
     Task UpdateAsync(Expense expense);
     Task DeleteAsync(Expense expense);

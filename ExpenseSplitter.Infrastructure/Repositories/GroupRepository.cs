@@ -19,8 +19,17 @@ namespace ExpenseSplitter.Infrastructure.Repositories
             await _context.Groups.AddAsync(group);
         }
 
-        public async Task DeleteAsync(Group user)
+        public async Task DeleteAsync(Group group)
         {
+            _context.Groups.Remove(group);
+        }
+
+        public Task<List<Group>> FindAllForUserAsync(Guid userId)
+        {
+            return _context.Groups
+                .Include(x => x.Members)
+                .Where(x => x.Members.Any(m => m.UserId == userId))
+                .ToListAsync();
         }
 
         public Task<Group?> FindByIdAsync(Guid groupId)
@@ -35,9 +44,10 @@ namespace ExpenseSplitter.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(Group user)
+        public Task UpdateAsync(Group group)
         {
-            throw new NotImplementedException();
+            _context.Groups.Update(group);
+            return Task.CompletedTask;
         }
     }
 }

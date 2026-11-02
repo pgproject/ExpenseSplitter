@@ -7,5 +7,8 @@ namespace ExpenseSplitter.Application.Interfaces
         Task<CreateExpenseResponse> CreateAsync(CreateExpenseRequest request);
         Task<UpdateExpenseResponse> UpdateAsync(UpdateExpenseRequest request);
         Task<RemoveExpenseResponse> RemoveAsync(RemoveExpenseRequest request);
+        Task<List<GetExpensesResponse>> GetAllAsync();
+
+        Task<List<GetExpensesResponse>> GetByGroupAsync(Guid groupId);
     }
 }

@@ -9,5 +9,7 @@ namespace ExpenseSplitter.Application.Interfaces.Groups
         Task<AddMemberResponse> AddMember(AddMemberRequest request);
         Task<RemoveMemberResponse> RemoveMember(RemoveMemberRequest request);
         Task<ChangeOwnershipResponse> ChangeOwnership(ChangeOwnershipRequest request);
+        Task<List<GetGroupsResponse>> GetAllAsync();
+        Task<GetGroupDetailsResponse> GetByIdAsync(Guid groupId);
     }
 }

@@ -48,5 +48,21 @@ namespace ExpenseSplitter.Api.Controllers
             var response = await _groupService.ChangeOwnership(request);
             return Ok(response);
         }
+
+        [HttpGet]
+        public async Task<ActionResult<List<GetGroupsResponse>>> GetAll()
+        {
+            var response = await _groupService.GetAllAsync();
+
+            return Ok(response);
+        }
+
+        [HttpGet("{groupId:guid}")]
+        public async Task<ActionResult<GetGroupDetailsResponse>> GetById(Guid groupId)
+        {
+            var response = await _groupService.GetByIdAsync(groupId);
+
+            return Ok(response);
+        }
     }
 }

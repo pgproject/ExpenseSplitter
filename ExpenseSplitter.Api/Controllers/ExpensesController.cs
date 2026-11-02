@@ -44,5 +44,21 @@ namespace ExpenseSplitter.Api.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet]
+        public async Task<ActionResult<List<GetExpensesResponse>>> GetAll()
+        {
+            var expenses = await _expenseService.GetAllAsync();
+            return Ok(expenses);
+        }
+
+        [HttpGet("group/{groupId:guid}")]
+        public async Task<ActionResult<List<GetExpensesResponse>>> GetByGroup(
+            Guid groupId)
+        {
+            var expenses = await _expenseService.GetByGroupAsync(groupId);
+
+            return Ok(expenses);
+        }
     }
 }

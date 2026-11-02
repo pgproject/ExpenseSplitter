@@ -1,9 +1,11 @@
 ﻿using ExpenseSplitter.Application.DTOs.Expense.Request;
 using ExpenseSplitter.Application.DTOs.Expense.Response;
 using ExpenseSplitter.Application.Interfaces;
+using ExpenseSplitter.Application.Interfaces.Groups;
 using ExpenseSplitter.Application.Interfaces.Users;
 using ExpenseSplitter.Domain.Entities;
 using ExpenseSplitter.Domain.Exceptions.Expense;
+using ExpenseSplitter.Domain.Exceptions.Group;
 
 namespace ExpenseSplitter.Application.Services
 {
@@ -12,12 +14,15 @@ namespace ExpenseSplitter.Application.Services
         private readonly ICurrentUserService _currentUserService;
         private readonly IExpenseRepository _expenseRepository;
         private readonly IExpenseCategoryService _expenseCategoryService;
+        private readonly IGroupRepository _groupRepository;
 
-        public ExpenseService(ICurrentUserService currentUserService, IExpenseRepository expenseRepository, IExpenseCategoryService expenseCategoryService)
+
+        public ExpenseService(ICurrentUserService currentUserService, IExpenseRepository expenseRepository, IExpenseCategoryService expenseCategoryService, IGroupRepository groupRepository)
         {
             _currentUserService = currentUserService;
             _expenseRepository = expenseRepository;
             _expenseCategoryService = expenseCategoryService;
+            _groupRepository = groupRepository;
         }
 
 
@@ -108,6 +113,69 @@ namespace ExpenseSplitter.Application.Services
             await _expenseRepository.SaveChangesAsync();
 
             return new RemoveExpenseResponse(expense.Id);
+        }
+
+        public async Task<List<GetExpensesResponse>> GetAllAsync()
+        {
+            var userId = _currentUserService.UserId;
+
+            var expenses = await _expenseRepository.FindAllForUserAsync(userId);
+
+            return expenses.Select(expense => new GetExpensesResponse(
+                expense.Id,
+                expense.Name,
+                expense.Amount,
+                expense.CategoryId,
+                expense.UserIdAdded,
+                expense.Date,
+                (int)expense.Currency,
+                expense.ExpenseAllocations.Select(allocation =>
+                    new ExpenseAllocationResponse(
+                        allocation.GroupId,
+                        allocation.ParticipantUserIds
+                    )
+                ).ToList()
+            )).ToList();
+        }
+
+        public async Task<List<GetExpensesResponse>> GetByGroupAsync(Guid groupId)
+        {
+            var userId = _currentUserService.UserId;
+
+            var group = await _groupRepository.FindByIdAsync(groupId);
+
+            if (group is null)
+            {
+                throw new GroupNotFoundException(groupId);
+            }
+
+            if (!group.Members.Any(member => member.UserId == userId))
+            {
+                throw new UserIsNotGroupMemberException();
+            }
+
+            var expenses = await _expenseRepository.FindAllForGroup(groupId);
+
+            return expenses.Select(MapToResponse).ToList();
+        }
+
+        private static GetExpensesResponse MapToResponse(Expense expense)
+        {
+            return new GetExpensesResponse(
+                expense.Id,
+                expense.Name,
+                expense.Amount,
+                expense.CategoryId,
+                expense.UserIdAdded,
+                expense.Date,
+                (int)expense.Currency,
+                expense.ExpenseAllocations.Select(allocation =>
+                    new ExpenseAllocationResponse(
+                        allocation.GroupId,
+                        allocation.ParticipantUserIds
+                    )
+                ).ToList()
+            );
         }
     }
 }
