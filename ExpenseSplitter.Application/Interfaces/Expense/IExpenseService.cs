@@ -5,7 +5,7 @@ namespace ExpenseSplitter.Application.Interfaces
     public interface IExpenseService
     {
         Task<CreateExpenseResponse> CreateAsync(CreateExpenseRequest request);
-        Task<UpdateExpenseRespone> UpdateAsync(UpdateExpenseRequest request);
-        Task<RemoveExpenseRespone> RemoveAsync(RemoveExpenseRequest request);
+        Task<UpdateExpenseResponse> UpdateAsync(UpdateExpenseRequest request);
+        Task<RemoveExpenseResponse> RemoveAsync(RemoveExpenseRequest request);
     }
 }

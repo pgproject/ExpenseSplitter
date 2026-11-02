@@ -1,12 +1,13 @@
-﻿using ExpenseSplitter.Application.DTOs.Groups;
+﻿using ExpenseSplitter.Application.DTOs.Groups.Request;
+using ExpenseSplitter.Application.DTOs.Groups.Response;
 
 namespace ExpenseSplitter.Application.Interfaces.Groups
 {
     public interface IGroupService
     {
-        Task<CreateGroupRequest> CreateAsync(CreateGroupRequest request);
-        Task<AddMemberRequest> AddMember(AddMemberRequest request);
-        Task<RemoveMemberRequest> RemoveMember(RemoveMemberRequest request);
-        Task<ChangeOwnershipRequest> ChangeOwnership(ChangeOwnershipRequest request);
+        Task<CreateGroupResponse> CreateAsync(CreateGroupRequest request);
+        Task<AddMemberResponse> AddMember(AddMemberRequest request);
+        Task<RemoveMemberResponse> RemoveMember(RemoveMemberRequest request);
+        Task<ChangeOwnershipResponse> ChangeOwnership(ChangeOwnershipRequest request);
     }
 }

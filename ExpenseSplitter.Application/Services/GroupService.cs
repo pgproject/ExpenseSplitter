@@ -1,4 +1,5 @@
-﻿using ExpenseSplitter.Application.DTOs.Groups;
+﻿using ExpenseSplitter.Application.DTOs.Groups.Request;
+using ExpenseSplitter.Application.DTOs.Groups.Response;
 using ExpenseSplitter.Application.Interfaces.Groups;
 using ExpenseSplitter.Application.Interfaces.Users;
 using ExpenseSplitter.Domain.Entities.Groups;
@@ -21,20 +22,31 @@ namespace ExpenseSplitter.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<CreateGroupRequest> CreateAsync(CreateGroupRequest request)
+        public async Task<CreateGroupResponse> CreateAsync(CreateGroupRequest request)
         {
             var currentUserId = _currentUserService.UserId;
             User user = await GetUserOrThrowExceptionAsync(currentUserId);
 
-            Group newGroup = new Group(request.name, currentUserId, request.settings);
-            newGroup.Settings.SetDefaultCurrency(user.UserSettings.DefaultUserCurrency);
+            GroupSettings settings = new GroupSettings(
+         user.UserSettings.DefaultUserCurrency);
+
+            settings.ChangeSettings(
+                request.settings.onlyOwnerCanAddMember,
+                request.settings.onlyOwnerCanRemoveMember,
+                user.UserSettings.DefaultUserCurrency);
+
+            Group newGroup = new Group(
+                request.name,
+                currentUserId,
+                settings);
 
             await _groupRepository.AddAsync(newGroup);
             await _groupRepository.SaveChangesAsync();
-            return new CreateGroupRequest(newGroup.Name, newGroup.Settings);
+
+            return new CreateGroupResponse(newGroup.Id, newGroup.Name);
         }
 
-        public async Task<AddMemberRequest> AddMember(AddMemberRequest request)
+        public async Task<AddMemberResponse> AddMember(AddMemberRequest request)
         {
             Group group = await GetGroupOrThrowExceptionAsync(request.existGroupId);
 
@@ -44,10 +56,10 @@ namespace ExpenseSplitter.Application.Services
 
             await _groupRepository.SaveChangesAsync();
 
-            return new AddMemberRequest(user.Email, group.Id);
+            return new AddMemberResponse(user.Email, group.Id);
         }
 
-        public async Task<RemoveMemberRequest> RemoveMember(RemoveMemberRequest request)
+        public async Task<RemoveMemberResponse> RemoveMember(RemoveMemberRequest request)
         {
             Group group = await GetGroupOrThrowExceptionAsync(request.existGroupId);
 
@@ -57,10 +69,10 @@ namespace ExpenseSplitter.Application.Services
 
             await _groupRepository.SaveChangesAsync();
 
-            return new RemoveMemberRequest(user.Email, group.Id);
+            return new RemoveMemberResponse(user.Email, group.Id);
         }
 
-        public async Task<ChangeOwnershipRequest> ChangeOwnership(ChangeOwnershipRequest request)
+        public async Task<ChangeOwnershipResponse> ChangeOwnership(ChangeOwnershipRequest request)
         {
             Group group = await GetGroupOrThrowExceptionAsync(request.existGroupId);
 
@@ -70,7 +82,7 @@ namespace ExpenseSplitter.Application.Services
             
             await _groupRepository.SaveChangesAsync();
 
-            return new ChangeOwnershipRequest(user.Email, group.Id);
+            return new ChangeOwnershipResponse(user.Email, group.Id);
         }
 
         private async Task<Group> GetGroupOrThrowExceptionAsync(Guid gruopId)

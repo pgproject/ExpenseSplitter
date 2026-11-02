@@ -1,6 +1,6 @@
 ﻿namespace ExpenseSplitter.Application.DTOs.Expense.Response
 {
-    public record RemoveExpenseRespone(Guid Id)
+    public record RemoveExpenseResponse(Guid expenseId)
     {
     }
 }

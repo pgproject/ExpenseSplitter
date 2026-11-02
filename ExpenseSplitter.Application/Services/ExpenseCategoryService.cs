@@ -1,4 +1,5 @@
-﻿using ExpenseSplitter.Application.DTOs.ExpenseCategory;
+﻿using ExpenseSplitter.Application.DTOs.ExpenseCategory.Request;
+using ExpenseSplitter.Application.DTOs.ExpenseCategory.Response;
 using ExpenseSplitter.Application.Interfaces;
 using ExpenseSplitter.Application.Interfaces.Users;
 using ExpenseSplitter.Domain.Entities;
@@ -20,7 +21,7 @@ namespace ExpenseSplitter.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<CreateCategoryExpenseRequest> CreateCategoryExpense(CreateCategoryExpenseRequest request)
+        public async Task<CreateExpenseCategoryResponse> CreateCategoryExpense(CreateCategoryExpenseRequest request)
         {
             var currentUserId = _currentUserService.UserId;
             User user = await GetUserOrThrowExceptionAsync(currentUserId);
@@ -45,10 +46,10 @@ namespace ExpenseSplitter.Application.Services
 
             await _expenseCategoryRepository.AddAsync(newCategory);
             await _expenseCategoryRepository.SaveChangesAsync();
-            return new CreateCategoryExpenseRequest(newCategory.Name);
+            return new CreateExpenseCategoryResponse(newCategory.Id, newCategory.Name);
         }
 
-        public async Task<ChangeCategoryExpenseNameRequest> ChangeCategoryExpenseName(ChangeCategoryExpenseNameRequest request)
+        public async Task<UpdateExpenseCategoryResponse> UpdateCategoryExpense(UpdateExpenseCategoryRequest request)
         {
             var currentUserId = _currentUserService.UserId;
             User user = await GetUserOrThrowExceptionAsync(currentUserId);
@@ -57,11 +58,13 @@ namespace ExpenseSplitter.Application.Services
                 throw new ThisUserIsNotAllowedToEditExpenseCategoryException();
             }
 
-            ExpenseCategory? expenseCategory = await _expenseCategoryRepository.FindByNameAsync(request.currentName, currentUserId);
-            if (expenseCategory == null) 
+            ExpenseCategory? expenseCategory = await _expenseCategoryRepository.FindByIdAsync(request.categoryId);
+
+            if (expenseCategory == null || expenseCategory.UserId != currentUserId)
             {
                 throw new InvalidCategoryExpenseException();
             }
+            
             if (expenseCategory.Name == request.newName)
             {
                 throw new ExpenseCategoryNameUnchangedException();
@@ -84,10 +87,10 @@ namespace ExpenseSplitter.Application.Services
             expenseCategory.ChangeName(request.newName);
             await _expenseCategoryRepository.SaveChangesAsync();
 
-            return new ChangeCategoryExpenseNameRequest(oldName, request.newName);
+            return new UpdateExpenseCategoryResponse(expenseCategory.Id, oldName, request.newName);
         }
 
-        public async Task<RemoveCategoryExpenseRequest> RemoveCategoryExpense(RemoveCategoryExpenseRequest request)
+        public async Task<RemoveExpenseCategoryResponse> RemoveCategoryExpense(RemoveCategoryExpenseRequest request)
         {
             var currentUserId = _currentUserService.UserId;
             User user = await GetUserOrThrowExceptionAsync(currentUserId);
@@ -95,9 +98,9 @@ namespace ExpenseSplitter.Application.Services
             {
                 throw new ThisUserIsNotAllowedToDeleteExpenseCategoryException();
             }
-            ExpenseCategory? expenseCategory = await _expenseCategoryRepository.FindByNameAsync(request.categoryName, currentUserId);
+            ExpenseCategory? expenseCategory = await _expenseCategoryRepository.FindByIdAsync(request.categoryId);
 
-            if (expenseCategory == null)
+            if (expenseCategory == null || expenseCategory.UserId != currentUserId)
             {
                 throw new InvalidCategoryExpenseException();
             }
@@ -105,8 +108,25 @@ namespace ExpenseSplitter.Application.Services
             await _expenseCategoryRepository.DeleteAsync(expenseCategory);
             await _expenseCategoryRepository.SaveChangesAsync();
 
-            return new RemoveCategoryExpenseRequest(expenseCategory.Name);
+            return new RemoveExpenseCategoryResponse(expenseCategory.Id, expenseCategory.Name);
         }
+
+        public async Task<List<GetExpenseCategoriesResponse>> GetAllAsync()
+        {
+            var currentUserId = _currentUserService.UserId;
+
+            User user = await GetUserOrThrowExceptionAsync(currentUserId);
+
+            List<ExpenseCategory> categories =
+                await _expenseCategoryRepository.FindAllForUser(user.Id);
+
+            return categories.Select(category => new GetExpenseCategoriesResponse(
+                category.Id,
+                category.Name,
+                category.IsPublic
+            )).ToList();
+        }
+
 
         private async Task<User> GetUserOrThrowExceptionAsync(Guid userId)
         {
@@ -119,5 +139,7 @@ namespace ExpenseSplitter.Application.Services
 
             return user;
         }
+
+        
     }
 }

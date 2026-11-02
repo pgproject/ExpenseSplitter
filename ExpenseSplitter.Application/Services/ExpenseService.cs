@@ -59,7 +59,7 @@ namespace ExpenseSplitter.Application.Services
             return new CreateExpenseResponse(expense.Id);
         }
 
-        public async Task<UpdateExpenseRespone> UpdateAsync(UpdateExpenseRequest request)
+        public async Task<UpdateExpenseResponse> UpdateAsync(UpdateExpenseRequest request)
         {
             var expense = await _expenseRepository.FindByIdAsync(request.id);
 
@@ -83,10 +83,10 @@ namespace ExpenseSplitter.Application.Services
             await _expenseRepository.UpdateAsync(expense);
             await _expenseRepository.SaveChangesAsync();
 
-            return new UpdateExpenseRespone(expense.Id);
+            return new UpdateExpenseResponse(expense.Id);
         }
 
-        public async Task<RemoveExpenseRespone> RemoveAsync(RemoveExpenseRequest request)
+        public async Task<RemoveExpenseResponse> RemoveAsync(RemoveExpenseRequest request)
         {
             var expense = await _expenseRepository.FindByIdAsync(request.id);
 
@@ -103,7 +103,7 @@ namespace ExpenseSplitter.Application.Services
             await _expenseRepository.DeleteAsync(expense);
             await _expenseRepository.SaveChangesAsync();
 
-            return new RemoveExpenseRespone(expense.Id);
+            return new RemoveExpenseResponse(expense.Id);
         }
     }
 }

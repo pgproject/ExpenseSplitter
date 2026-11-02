@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ExpenseSplitter.Application.DTOs.Authentication;
 using ExpenseSplitter.Application.Interfaces.Authentication;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace ExpenseSplitter.Api.Controllers
