@@ -1,4 +1,3 @@
-
 import { useState, type FormEvent } from "react";
 import { Link, Navigate, useLocation, useNavigate} from "react-router-dom";
 import { ArrowRight, Wallet } from "lucide-react";
