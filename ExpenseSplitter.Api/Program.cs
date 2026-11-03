@@ -19,9 +19,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+                "http://localhost:5173",
+                "https://expense-splitter-5po950q5j-my-own-team18.vercel.app"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
