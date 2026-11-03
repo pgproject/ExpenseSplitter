@@ -6,7 +6,7 @@ import type {
   AuthUser,
 } from "../types/auth";
 
-const API_URL = "http://localhost:8080/api/Auth";
+const API_URL = "http://localhost:32768/api/Auth";
 
 export const authService = {
   async login(data: LoginRequest): Promise<LoginResponse> {

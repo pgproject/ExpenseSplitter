@@ -8,7 +8,7 @@ import type {
   GetExpenseCategoriesResponse,
 } from "../types/expenseCategory";
 
-const API_URL = "http://localhost:8080/api/expense-categories";
+const API_URL = "http://localhost:32768/api/expense-categories";
 
 async function sendRequest<T>(
   method: string,

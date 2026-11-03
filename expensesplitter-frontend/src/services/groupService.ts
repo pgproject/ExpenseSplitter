@@ -12,7 +12,7 @@ import type {
   GetGroupDetailsResponse,
 } from "../types/group";
 
-const API_URL = "http://localhost:8080/api/groups";
+const API_URL = "http://localhost:32768/api/groups";
 
 async function sendRequest<T>(
   endpoint: string,

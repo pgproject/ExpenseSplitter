@@ -9,7 +9,7 @@ import type {
   GetExpensesResponse,
 } from "../types/expense";
 
-const API_URL = "http://localhost:8080/api/expenses";
+const API_URL = "http://localhost:32768/api/expenses";
 
 async function sendRequest<T>(
   method: string,
