@@ -1,4 +1,3 @@
-
 export interface CreateGroupSettingsRequest {
   onlyOwnerCanAddMember: boolean;
   onlyOwnerCanRemoveMember: boolean;

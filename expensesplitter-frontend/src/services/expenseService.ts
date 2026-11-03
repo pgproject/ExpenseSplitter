@@ -1,3 +1,4 @@
+import API_URL from "../config/api";
 
 import type {
   CreateExpenseRequest,
@@ -9,7 +10,7 @@ import type {
   GetExpensesResponse,
 } from "../types/expense";
 
-const API_URL = "http://localhost:32768/api/expenses";
+const ENDPOINT = `${API_URL}/api/expenses`;
 
 async function sendRequest<T>(
   method: string,
@@ -17,7 +18,7 @@ async function sendRequest<T>(
 ): Promise<T> {
   const token = localStorage.getItem("accessToken");
 
-  const response = await fetch(API_URL, {
+  const response = await fetch(ENDPOINT, {
     method,
     headers: {
       "Content-Type": "application/json",
@@ -55,7 +56,7 @@ export const expenseService = {
   async getAll(): Promise<GetExpensesResponse[]> {
     const token = localStorage.getItem("accessToken");
 
-    const response = await fetch(API_URL, {
+    const response = await fetch(ENDPOINT, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -72,7 +73,7 @@ export const expenseService = {
   async getByGroup(groupId: string): Promise<GetExpensesResponse[]> {
     const token = localStorage.getItem("accessToken");
 
-    const response = await fetch(`${API_URL}/group/${groupId}`, {
+    const response = await fetch(`${ENDPOINT}/group/${groupId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

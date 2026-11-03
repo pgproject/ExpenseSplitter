@@ -1,3 +1,4 @@
+import API_URL from "../config/api";
 
 import type {
   CreateGroupRequest,
@@ -12,7 +13,7 @@ import type {
   GetGroupDetailsResponse,
 } from "../types/group";
 
-const API_URL = "http://localhost:32768/api/groups";
+const ENDPOINT = `${API_URL}/api/groups`;
 
 async function sendRequest<T>(
   endpoint: string,
@@ -21,7 +22,7 @@ async function sendRequest<T>(
 ): Promise<T> {
   const token = localStorage.getItem("accessToken");
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(`${ENDPOINT}${endpoint}`, {
     method,
     headers: {
       "Content-Type": "application/json",

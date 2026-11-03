@@ -1,3 +1,5 @@
+import API_URL from "../config/api";
+
 import type {
   LoginRequest,
   LoginResponse,
@@ -6,11 +8,11 @@ import type {
   AuthUser,
 } from "../types/auth";
 
-const API_URL = "http://localhost:32768/api/Auth";
+const ENDPOINT = `${API_URL}/api/Auth`;
 
 export const authService = {
   async login(data: LoginRequest): Promise<LoginResponse> {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch(`${ENDPOINT}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -26,7 +28,7 @@ export const authService = {
   },
 
   async register(data: RegisterRequest): Promise<RegisterResponse> {
-    const response = await fetch(`${API_URL}/register`, {
+    const response = await fetch(`${ENDPOINT}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +44,7 @@ export const authService = {
   },
 
   async getCurrentUser(token: string): Promise<AuthUser> {
-    const response = await fetch(`${API_URL}/me`, {
+    const response = await fetch(`${ENDPOINT}/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

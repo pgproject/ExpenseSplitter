@@ -1,3 +1,5 @@
+import API_URL from "../config/api";
+
 import type {
   CreateCategoryExpenseRequest,
   CreateExpenseCategoryResponse,
@@ -8,7 +10,7 @@ import type {
   GetExpenseCategoriesResponse,
 } from "../types/expenseCategory";
 
-const API_URL = "http://localhost:32768/api/expense-categories";
+const ENDPOINT = `${API_URL}/api/expense-categories`;
 
 async function sendRequest<T>(
   method: string,
@@ -16,7 +18,7 @@ async function sendRequest<T>(
 ): Promise<T> {
   const token = localStorage.getItem("accessToken");
 
-  const response = await fetch(API_URL, {
+  const response = await fetch(ENDPOINT, {
     method,
     headers: {
       "Content-Type": "application/json",
