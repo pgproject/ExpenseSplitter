@@ -1,6 +1,4 @@
-
 import { useEffect, useState } from "react";
-import type { SyntheticEvent } from "react";
 
 import { Users, Plus, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -10,6 +8,8 @@ import { expenseService } from "../services/expenseService";
 
 import type { GetGroupsResponse } from "../types/group";
 import type { GetExpensesResponse } from "../types/expense";
+
+import CreateGroupModal from "../components/groups/CreateGroupModal";
 
 const currencyCodes: Record<number, string> = {
   0: "PLN",
@@ -37,14 +37,6 @@ function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
-  const [groupName, setGroupName] = useState("");
-  const [onlyOwnerCanAddMember, setOnlyOwnerCanAddMember] = useState(false);
-  const [onlyOwnerCanRemoveMember, setOnlyOwnerCanRemoveMember] =
-    useState(false);
-  const [isCreatingGroup, setIsCreatingGroup] = useState(false);
-  const [createGroupError, setCreateGroupError] = useState<string | null>(
-    null
-  );
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -79,43 +71,9 @@ function DashboardPage() {
     loadDashboard();
   }, []);
 
-  const handleCreateGroup = async (
-    event: SyntheticEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
-
-    if (!groupName.trim()) {
-      return;
-    }
-
-    try {
-      setIsCreatingGroup(true);
-      setCreateGroupError(null);
-
-      await groupService.createGroup({
-        name: groupName.trim(),
-        settings: {
-          onlyOwnerCanAddMember,
-          onlyOwnerCanRemoveMember,
-        },
-      });
-
-      const updatedGroups = await groupService.getAll();
-      setGroups(updatedGroups);
-
-      setGroupName("");
-      setOnlyOwnerCanAddMember(false);
-      setOnlyOwnerCanRemoveMember(false);
-      setIsCreateGroupOpen(false);
-    } catch (error) {
-      setCreateGroupError(
-        error instanceof Error
-          ? error.message
-          : "Nie udało się utworzyć grupy."
-      );
-    } finally {
-      setIsCreatingGroup(false);
-    }
+  const handleGroupCreated = async () => {
+    const updatedGroups = await groupService.getAll();
+    setGroups(updatedGroups);
   };
 
   const groupNames = new Map(
@@ -177,10 +135,7 @@ function DashboardPage() {
 
               <button
                 className="text-button"
-                onClick={() => {
-                  setCreateGroupError(null);
-                  setIsCreateGroupOpen(true);
-                }}
+                onClick={() => setIsCreateGroupOpen(true)}
               >
                 <Plus size={16} /> Create group
               </button>
@@ -261,91 +216,10 @@ function DashboardPage() {
       </main>
 
       {isCreateGroupOpen && (
-        <div
-          className="modal-overlay"
-          onClick={() => setIsCreateGroupOpen(false)}
-        >
-          <div
-            className="modal"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="modal-header">
-              <h3>Create group</h3>
-
-              <button
-                type="button"
-                className="modal-close"
-                onClick={() => setIsCreateGroupOpen(false)}
-              >
-                ×
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateGroup}>
-              <div className="form-group">
-                <label htmlFor="groupName">Group name</label>
-
-                <input
-                  id="groupName"
-                  type="text"
-                  value={groupName}
-                  onChange={(event) => setGroupName(event.target.value)}
-                  placeholder="e.g. Apartment, Italy trip..."
-                  required
-                  maxLength={100}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Group permissions</label>
-
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={onlyOwnerCanAddMember}
-                    onChange={(event) =>
-                      setOnlyOwnerCanAddMember(event.target.checked)
-                    }
-                  />
-                  Only the owner can add members
-                </label>
-
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={onlyOwnerCanRemoveMember}
-                    onChange={(event) =>
-                      setOnlyOwnerCanRemoveMember(event.target.checked)
-                    }
-                  />
-                  Only the owner can remove members
-                </label>
-              </div>
-
-              {createGroupError && (
-                <p className="form-error">{createGroupError}</p>
-              )}
-
-              <div className="modal-actions">
-                <button
-                  type="button"
-                  className="secondary-button"
-                  onClick={() => setIsCreateGroupOpen(false)}
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  className="primary-button"
-                  disabled={isCreatingGroup || !groupName.trim()}
-                >
-                  {isCreatingGroup ? "Creating..." : "Create group"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <CreateGroupModal
+          onClose={() => setIsCreateGroupOpen(false)}
+          onGroupCreated={handleGroupCreated}
+        />
       )}
     </>
   );
