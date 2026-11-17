@@ -35,7 +35,7 @@ var corsService = app.Services.GetRequiredService<
 
 Console.WriteLine($"CORS service registered: {corsService != null}");
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
