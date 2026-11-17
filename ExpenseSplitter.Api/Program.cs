@@ -22,7 +22,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
                 "http://localhost:5173",
                 "https://expense-splitter-mu-coral.vercel.app",
-                "https://expense-splitter-y0dj9uf5j-my-own-team18.vercel.app"
+                "https://expense-splitter-dm2kdrkcb-my-own-team18.vercel.app"
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
