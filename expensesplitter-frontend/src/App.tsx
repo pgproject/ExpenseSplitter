@@ -1,11 +1,9 @@
+
 import { useEffect, useState } from "react";
 import type { SyntheticEvent, ReactNode } from "react";
 
 import {
-  LayoutDashboard,
   Users,
-  Receipt,
-  Settings,
   Plus,
   Wallet,
 } from "lucide-react";
@@ -15,9 +13,10 @@ import {
   Routes,
   Route,
   Navigate,
-  NavLink,
   Link,
 } from "react-router-dom";
+
+import AppLayout from "./components/layout/AppLayout";
 
 import "./App.css";
 
@@ -68,8 +67,6 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 }
 
 function DashboardPage() {
-  const { user, logout } = useAuth();
-
   const [groups, setGroups] = useState<GetGroupsResponse[]>([]);
   const [expenses, setExpenses] = useState<GetExpensesResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -162,50 +159,9 @@ function DashboardPage() {
   );
 
   const recentExpenses = expenses.slice(0, 5);
-  const initials = user?.email?.charAt(0).toUpperCase() ?? "?";
 
   return (
-    <div className="app">
-      <aside className="sidebar">
-        <h1 className="logo">ExpenseSplitter</h1>
-
-        <nav>
-          <NavLink
-            to="/"
-            className={({ isActive }) => (isActive ? "active" : "")}
-          >
-            <LayoutDashboard size={20} /> Dashboard
-          </NavLink>
-
-          <a>
-            <Users size={20} /> My groups
-          </a>
-
-          <a>
-            <Receipt size={20} /> All expenses
-          </a>
-
-          <NavLink
-            to="/settings"
-            className={({ isActive }) => (isActive ? "active" : "")}>
-              <Settings size={20} /> Settings
-          </NavLink>
-        </nav>
-
-        <div className="profile">
-          <div className="avatar">{initials}</div>
-
-          <div>
-            <strong>{user?.email ?? "User"}</strong>
-            <small>My account</small>
-
-            <button className="text-button" onClick={logout}>
-              Log out
-            </button>
-          </div>
-        </div>
-      </aside>
-
+    <>
       <main className="main">
         <header className="header">
           <div>
@@ -427,7 +383,7 @@ function DashboardPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 
@@ -439,37 +395,27 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <AppLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<DashboardPage />} />
 
-        <Route
-          path="/groups/:groupId"
-          element={
-            <ProtectedRoute>
-              <GroupDetailsPage />
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <SettingsPage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="groups/:groupId"
+            element={<GroupDetailsPage />}
+          />
 
-        <Route
-          path="/settings/login-security"
-          element={
-            <ProtectedRoute>
-              <LoginSecurityPage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="settings"
+            element={<SettingsPage />}
+          />
+
+          <Route
+            path="settings/login-security"
+            element={<LoginSecurityPage />}
+          />
+        </Route>
 
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
