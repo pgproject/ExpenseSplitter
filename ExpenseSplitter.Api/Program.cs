@@ -21,7 +21,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
                 "http://localhost:5173",
-                "https://expense-splitter-mu-coral.vercel.app"
+                "https://expense-splitter-mu-coral.vercel.app",
+                "https://expense-splitter-dm2kdrkcb-my-own-team18.vercel.app"
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
@@ -35,7 +36,7 @@ var corsService = app.Services.GetRequiredService<
 
 Console.WriteLine($"CORS service registered: {corsService != null}");
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
