@@ -48,5 +48,10 @@ namespace ExpenseSplitter.Infrastructure.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public Task<User?> FindByGoogleIdAsync(string googleId)
+        {
+            return _dbContext.Users.FirstOrDefaultAsync(x => x.GoogleId == googleId);
+        }
     }
 }

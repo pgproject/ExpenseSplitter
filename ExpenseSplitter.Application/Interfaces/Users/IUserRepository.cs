@@ -11,5 +11,6 @@ namespace ExpenseSplitter.Application.Interfaces.Users
         Task UpdateAsync(User user);
         Task DeleteAsync(User user);
         Task SaveChangesAsync();
+        Task<User?> FindByGoogleIdAsync(string googleId);
     }
 }

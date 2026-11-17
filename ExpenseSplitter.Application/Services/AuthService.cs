@@ -40,7 +40,7 @@ namespace ExpenseSplitter.Application.Services
         {
             User? user = await _userRepository.FindByEmailAsync(request.Email) ?? throw new InvalidCredentialsException();
 
-            if (!_passwordHasher.VerifyPassword(user.PasswordHash, request.Password))
+            if (user.PasswordHash == null || !_passwordHasher.VerifyPassword(user.PasswordHash, request.Password))
             {
                 throw new InvalidCredentialsException();
             }

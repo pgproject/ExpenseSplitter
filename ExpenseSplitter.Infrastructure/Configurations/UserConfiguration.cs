@@ -14,7 +14,10 @@ namespace ExpenseSplitter.Infrastructure.Configurations
                 .IsRequired();
 
             builder.Property(x => x.PasswordHash)
-                .IsRequired();
+                .IsRequired(false);
+
+            builder.Property(x => x.GoogleId)
+                .IsRequired(false);
 
             builder.OwnsOne(x => x.UserSettings, settings =>
             {
@@ -33,6 +36,10 @@ namespace ExpenseSplitter.Infrastructure.Configurations
                 settings.Property(x => x.DefaultUserCurrency)
                     .IsRequired();
             });
+
+            builder.HasIndex(x => x.GoogleId)
+                    .IsUnique()
+                    .HasFilter("\"GoogleId\" IS NOT NULL");
         }
     }
 }
