@@ -49,14 +49,40 @@ namespace ExpenseSplitter.Api.Controllers
         }
 
         [Authorize]
-        [HttpGet("me")]
-        public IActionResult Me()
+        [HttpPost("link-google")]
+        public async Task<IActionResult> LinkGoogleAccountAsync([FromBody] GoogleLoginRequest request)
         {
+            string? userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!Guid.TryParse(userIdClaim, out Guid userId))
+            {
+                return Unauthorized();
+            }
+
+            await _authService.LinkGoogleAccountAsync(userId, request);
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> Me()
+        {
+            string? userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!Guid.TryParse(userIdClaim, out Guid userId))
+            {
+                return Unauthorized();
+            }
+
+            bool googleConnected = await _authService.HasGoogleAccountAsync(userId);
+
             return Ok(new
             {
-                Id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-                Email = User.FindFirst(ClaimTypes.Email)?.Value,
-                Role = User.FindFirst(ClaimTypes.Role)?.Value
+                Id = userId,
+                Email = User.FindFirstValue(ClaimTypes.Email),
+                Role = User.FindFirstValue(ClaimTypes.Role),
+                GoogleConnected = googleConnected
             });
         }
     }

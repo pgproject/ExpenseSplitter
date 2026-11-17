@@ -6,7 +6,8 @@ namespace ExpenseSplitter.Application.Interfaces.Authentication
     {
         Task<RegisterResponse> RegisterUserAsync(RegisterRequest registerUserRequest);
         Task<LoginResponse> LoginUserAsync(LoginRequest registerUserRequest);
-
         Task<LoginResponse> LoginWithGoogleAsync(GoogleLoginRequest request);
+        Task LinkGoogleAccountAsync(Guid userId, GoogleLoginRequest request);
+        Task<bool> HasGoogleAccountAsync(Guid userId);
     }
 }

@@ -25,3 +25,10 @@ export interface AuthUser {
   email: string;
   role: number;
 }
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  role: number;
+  googleConnected: boolean;
+}

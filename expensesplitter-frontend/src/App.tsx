@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import type { SyntheticEvent, ReactNode } from "react";
 
@@ -25,6 +24,8 @@ import "./App.css";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import GroupDetailsPage from "./pages/GroupDetailsPage";
+import SettingsPage from "./pages/SettingsPage";
+import LoginSecurityPage from "./pages/LoginSecurityPage";
 
 import { useAuth } from "./context/AuthContext";
 import { groupService } from "./services/groupService";
@@ -184,9 +185,11 @@ function DashboardPage() {
             <Receipt size={20} /> All expenses
           </a>
 
-          <a>
-            <Settings size={20} /> Settings
-          </a>
+          <NavLink
+            to="/settings"
+            className={({ isActive }) => (isActive ? "active" : "")}>
+              <Settings size={20} /> Settings
+          </NavLink>
         </nav>
 
         <div className="profile">
@@ -446,6 +449,24 @@ function App() {
           element={
             <ProtectedRoute>
               <GroupDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/settings/login-security"
+          element={
+            <ProtectedRoute>
+              <LoginSecurityPage />
             </ProtectedRoute>
           }
         />

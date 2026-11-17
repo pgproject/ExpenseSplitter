@@ -80,7 +80,6 @@ namespace ExpenseSplitter.Application.Services
 
             if (user == null)
             {
-                // Nie łączymy automatycznie kont na podstawie adresu e-mail.
                 if (await _userRepository.ExistsByEmailAsync(googleUser.email))
                 {
                     throw new EmailAlreadyExistsException();
@@ -96,6 +95,54 @@ namespace ExpenseSplitter.Application.Services
             }
 
             return CreateLoginResponse(user);
+        }
+        public async Task LinkGoogleAccountAsync(Guid userId, GoogleLoginRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.idToken))
+            {
+                throw new InvalidCredentialsException();
+            }
+
+            User user = await _userRepository.FindByIdAsync(userId)
+                ?? throw new InvalidCredentialsException();
+
+            GoogleUserInfo googleUser =
+                await _googleTokenValidator.ValidateAsync(request.idToken);
+
+            if (!googleUser.emailVerified)
+            {
+                throw new InvalidCredentialsException();
+            }
+
+            if (!string.Equals(
+                user.Email,
+                googleUser.email,
+                StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidCredentialsException();
+            }
+
+            User? existingGoogleUser =
+                await _userRepository.FindByGoogleIdAsync(googleUser.googleId);
+
+            if (existingGoogleUser != null)
+            {
+                if (existingGoogleUser.Id == user.Id)
+                    return;
+
+                throw new EmailAlreadyExistsException();
+            }
+
+            user.GoogleId = googleUser.googleId;
+
+            await _userRepository.UpdateAsync(user);
+            await _userRepository.SaveChangesAsync();
+        }
+        public async Task<bool> HasGoogleAccountAsync(Guid userId)
+        {
+            User? user = await _userRepository.FindByIdAsync(userId);
+
+            return user?.GoogleId != null;
         }
 
         private LoginResponse CreateLoginResponse(User user)

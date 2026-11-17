@@ -663,3 +663,54 @@ button:disabled {
   font-size: 13px;
   margin-top: 8px;
 }
+
+.settings-link {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.settings-link .panel {
+  height: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.settings-link:hover .panel {
+  border-color: #a5b4fc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  color: #64748b;
+  text-decoration: none;
+}
+
+.status-active {
+  color: #15803d;
+  font-size: 14px;
+}
+
+.status-inactive {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.google-connect-button {
+  margin-top: 16px;
+}
+
+.status-error {
+  color: #dc2626;
+  font-size: 14px;
+  margin-top: 12px;
+}

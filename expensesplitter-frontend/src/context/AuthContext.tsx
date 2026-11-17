@@ -16,6 +16,7 @@ interface AuthContextType {
   login: (data: LoginRequest) => Promise<void>;
   loginWithGoogle: (idToken: string) => Promise<void>;
   logout: () => void;
+  linkGoogleAccount: (idToken: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,11 +59,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     localStorage.setItem(TOKEN_KEY, response.accessToken);
 
-    setUser({
-      id: response.userId,
-      email: response.email,
-      role: response.role,
-    });
+    const currentUser = await authService.getCurrentUser(response.accessToken);
+    setUser(currentUser);
   };
 
   const logout = (): void => {
@@ -75,11 +73,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     localStorage.setItem(TOKEN_KEY, response.accessToken);
 
-    setUser({
-      id: response.userId,
-      email: response.email,
-      role: response.role,
-    });
+    const currentUser = await authService.getCurrentUser(response.accessToken);
+    setUser(currentUser);
+  };
+
+  const linkGoogleAccount = async (idToken: string): Promise<void> => {
+    const token = localStorage.getItem(TOKEN_KEY);
+
+    if (!token) {
+      throw new Error("User is not authenticated.");
+    }
+
+    await authService.linkGoogleAccount(idToken, token);
+
+    const updatedUser = await authService.getCurrentUser(token);
+    setUser(updatedUser);
   };
 
   return (
@@ -91,6 +99,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         login,
         loginWithGoogle,
         logout,
+        linkGoogleAccount,
       }}
     >
       {children}

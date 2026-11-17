@@ -46,7 +46,8 @@ namespace ExpenseSplitter.Infrastructure.Repositories
 
         public Task UpdateAsync(User user)
         {
-            throw new NotImplementedException();
+            _dbContext.Users.Update(user);
+            return Task.CompletedTask;
         }
 
         public Task<User?> FindByGoogleIdAsync(string googleId)
