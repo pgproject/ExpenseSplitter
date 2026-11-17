@@ -56,4 +56,19 @@ export const authService = {
 
     return response.json();
   },
+  async loginWithGoogle(idToken: string): Promise<LoginResponse> {
+    const response = await fetch(`${ENDPOINT}/google`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ idToken }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Nie udało się zalogować przez Google.");
+    }
+
+    return response.json();
+  },
 };

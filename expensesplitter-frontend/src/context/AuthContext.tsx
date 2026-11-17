@@ -14,6 +14,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (data: LoginRequest) => Promise<void>;
+  loginWithGoogle: (idToken: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -69,6 +70,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   };
 
+  const loginWithGoogle = async (idToken: string): Promise<void> => {
+    const response = await authService.loginWithGoogle(idToken);
+
+    localStorage.setItem(TOKEN_KEY, response.accessToken);
+
+    setUser({
+      id: response.userId,
+      email: response.email,
+      role: response.role,
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -76,6 +89,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAuthenticated: user !== null,
         isLoading,
         login,
+        loginWithGoogle,
         logout,
       }}
     >

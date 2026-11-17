@@ -189,3 +189,26 @@
     margin-bottom: 32px;
   }
 }
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+  color: #888;
+  font-size: 12px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #ddd;
+}
+
+.google-login {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

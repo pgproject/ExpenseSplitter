@@ -3,10 +3,11 @@ import { Link, Navigate, useLocation, useNavigate} from "react-router-dom";
 import { ArrowRight, Wallet } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
+import { GoogleLogin } from "@react-oauth/google";
 import "./LoginPage.css";
 
 function LoginPage() {
-  const { login, isAuthenticated, isLoading } = useAuth();
+  const { login, loginWithGoogle, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const registrationSuccess = location.state?.registrationSuccess === true;
@@ -43,6 +44,24 @@ function LoginPage() {
     }
   };
 
+  const handleGoogleSuccess = async (credential: string) => {
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      await loginWithGoogle(credential);
+      navigate("/", { replace: true });
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+        : "An unexpected error occurred."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
   return (
     <div className="auth-page">
       <div className="auth-card">
@@ -106,6 +125,31 @@ function LoginPage() {
             {!isSubmitting && <ArrowRight size={18} />}
           </button>
         </form>
+
+          <div className="auth-divider">
+            <span>OR</span>
+          </div>  
+
+          <div className="google-login">
+            <GoogleLogin
+              onSuccess={(response) => {
+                if (response.credential) {
+                  void handleGoogleSuccess(response.credential);
+                } else {
+                  setError("Google did not return an ID token.");
+                }
+              }}
+
+                onError={() => {
+                  setError("Google sign-in failed.");
+                }}
+              theme="outline"
+              size="large"
+              text="continue_with"
+              shape="rectangular"
+              width="100%"
+            />
+          </div>
 
         <div className="auth-footer">
           Don't have an account?{" "}

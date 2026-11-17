@@ -45,6 +45,7 @@ namespace ExpenseSplitter.Infrastructure.Extensions
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IGoogleTokenValidator, GoogleTokenValidator>();
 
             return services;
         }

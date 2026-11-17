@@ -12,22 +12,39 @@ namespace ExpenseSplitter.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+
         public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<RegisterResponse>> RegisterAsync([FromBody] RegisterRequest request)
+        public async Task<ActionResult<RegisterResponse>> RegisterAsync(
+            [FromBody] RegisterRequest request)
         {
-            RegisterResponse response = await _authService.RegisterUserAsync(request);
+            RegisterResponse response =
+                await _authService.RegisterUserAsync(request);
+
             return Ok(response);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<LoginResponse>> LoginAsync([FromBody] LoginRequest request)
+        public async Task<ActionResult<LoginResponse>> LoginAsync(
+            [FromBody] LoginRequest request)
         {
-            LoginResponse response = await _authService.LoginUserAsync(request);
+            LoginResponse response =
+                await _authService.LoginUserAsync(request);
+
+            return Ok(response);
+        }
+
+        [HttpPost("google")]
+        public async Task<ActionResult<LoginResponse>> LoginWithGoogleAsync(
+            [FromBody] GoogleLoginRequest request)
+        {
+            LoginResponse response =
+                await _authService.LoginWithGoogleAsync(request);
+
             return Ok(response);
         }
 
