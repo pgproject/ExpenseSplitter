@@ -1,41 +1,21 @@
 
-import { useState } from "react";
 import { Shield, Mail, Lock, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
+
 import { useAuth } from "../context/AuthContext";
+import { useLoginSecurity } from "../hooks/useLoginSecurity";
 
 function LoginSecurityPage() {
-  const { user, linkGoogleAccount } = useAuth();
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [isLinking, setIsLinking] = useState(false);
+  const { user } = useAuth();
 
-  const handleGoogleSuccess = async (credentialResponse: {
-    credential?: string;
-  }) => {
-    if (!credentialResponse.credential) {
-      setError("Google did not return an ID token.");
-      return;
-    }
-
-    setError(null);
-    setSuccess(false);
-    setIsLinking(true);
-
-    try {
-      await linkGoogleAccount(credentialResponse.credential);
-      setSuccess(true);
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to connect Google account."
-      );
-    } finally {
-      setIsLinking(false);
-    }
-  };
+  const {
+    error,
+    success,
+    isLinking,
+    handleGoogleSuccess,
+    handleGoogleError,
+  } = useLoginSecurity();
 
   return (
     <main className="main">
@@ -90,7 +70,7 @@ function LoginSecurityPage() {
               <div className="google-connect-button">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
-                  onError={() => setError("Google authentication failed.")}
+                  onError={handleGoogleError}
                   width="320"
                   text="continue_with"
                 />
