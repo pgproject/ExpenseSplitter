@@ -1,3 +1,5 @@
+import type { Currency } from "./currency";
+
 export interface CreateGroupSettingsRequest {
   onlyOwnerCanAddMember: boolean;
   onlyOwnerCanRemoveMember: boolean;
@@ -59,7 +61,7 @@ export interface GroupMemberResponse {
 export interface GroupSettingsResponse {
   onlyOwnerCanAddMember: boolean;
   onlyOwnerCanRemoveMember: boolean;
-  defaultCurrency: number;
+  defaultCurrency: Currency;
 }
 
 export interface GetGroupDetailsResponse {

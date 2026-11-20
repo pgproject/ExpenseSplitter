@@ -1,4 +1,4 @@
-export interface CreateCategoryExpenseRequest {
+export interface CreateExpenseCategoryRequest {
   categoryId: string;
   name: string;
 }

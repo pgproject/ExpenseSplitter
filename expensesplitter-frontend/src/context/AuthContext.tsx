@@ -31,6 +31,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const authenticate = async (accessToken: string): Promise<void> => {
+    localStorage.setItem(TOKEN_KEY, accessToken);
+
+    const currentUser = await authService.getCurrentUser(accessToken);
+    setUser(currentUser);
+  };
+
   useEffect(() => {
     const initializeAuth = async () => {
       const token = localStorage.getItem(TOKEN_KEY);
@@ -56,25 +63,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (data: LoginRequest): Promise<void> => {
     const response = await authService.login(data);
+    await authenticate(response.accessToken);
+  };
 
-    localStorage.setItem(TOKEN_KEY, response.accessToken);
-
-    const currentUser = await authService.getCurrentUser(response.accessToken);
-    setUser(currentUser);
+  const loginWithGoogle = async (idToken: string): Promise<void> => {
+    const response = await authService.loginWithGoogle(idToken);
+    await authenticate(response.accessToken);
   };
 
   const logout = (): void => {
     localStorage.removeItem(TOKEN_KEY);
     setUser(null);
-  };
-
-  const loginWithGoogle = async (idToken: string): Promise<void> => {
-    const response = await authService.loginWithGoogle(idToken);
-
-    localStorage.setItem(TOKEN_KEY, response.accessToken);
-
-    const currentUser = await authService.getCurrentUser(response.accessToken);
-    setUser(currentUser);
   };
 
   const linkGoogleAccount = async (idToken: string): Promise<void> => {

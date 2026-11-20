@@ -10,66 +10,73 @@ import type {
 
 const ENDPOINT = `${API_URL}/api/Auth`;
 
+async function request<T>(
+  url: string,
+  options: RequestInit,
+  errorMessage: string
+): Promise<T> {
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
+}
+
 export const authService = {
   async login(data: LoginRequest): Promise<LoginResponse> {
-    const response = await fetch(`${ENDPOINT}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    return request(
+      `${ENDPOINT}/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error("Nieprawidłowy email lub hasło.");
-    }
-
-    return response.json();
+      "Nieprawidłowy email lub hasło."
+    );
   },
 
   async register(data: RegisterRequest): Promise<RegisterResponse> {
-    const response = await fetch(`${ENDPOINT}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    return request(
+      `${ENDPOINT}/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error("Nie udało się utworzyć konta.");
-    }
-
-    return response.json();
+      "Nie udało się utworzyć konta."
+    );
   },
 
   async getCurrentUser(token: string): Promise<AuthUser> {
-    const response = await fetch(`${ENDPOINT}/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    return request(
+      `${ENDPOINT}/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
-
-    if (!response.ok) {
-      throw new Error("Nie udało się pobrać danych użytkownika.");
-    }
-
-    return response.json();
+      "Nie udało się pobrać danych użytkownika."
+    );
   },
+
   async loginWithGoogle(idToken: string): Promise<LoginResponse> {
-    const response = await fetch(`${ENDPOINT}/google`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    return request(
+      `${ENDPOINT}/google`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
       },
-      body: JSON.stringify({ idToken }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Nie udało się zalogować przez Google.");
-    }
-
-    return response.json();
+      "Nie udało się zalogować przez Google."
+    );
   },
 
   async linkGoogleAccount(idToken: string, token: string): Promise<void> {
