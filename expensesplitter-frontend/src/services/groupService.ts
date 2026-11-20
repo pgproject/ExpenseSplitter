@@ -17,7 +17,7 @@ const ENDPOINT = `${API_URL}/api/groups`;
 
 async function sendRequest<T>(
   endpoint: string,
-  method: string,
+  method: RequestInit["method"],
   data?: unknown
 ): Promise<T> {
   const token = localStorage.getItem("accessToken");

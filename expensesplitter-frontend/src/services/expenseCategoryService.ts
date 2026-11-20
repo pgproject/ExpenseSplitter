@@ -1,7 +1,7 @@
 import API_URL from "../config/api";
 
 import type {
-  CreateCategoryExpenseRequest,
+  CreateExpenseCategoryRequest,
   CreateExpenseCategoryResponse,
   UpdateExpenseCategoryRequest,
   UpdateExpenseCategoryResponse,
@@ -13,7 +13,7 @@ import type {
 const ENDPOINT = `${API_URL}/api/expense-categories`;
 
 async function sendRequest<T>(
-  method: string,
+  method: RequestInit["method"],
   data?: unknown
 ): Promise<T> {
   const token = localStorage.getItem("accessToken");
@@ -42,7 +42,7 @@ export const expenseCategoryService = {
   },
 
   async create(
-    data: CreateCategoryExpenseRequest
+    data: CreateExpenseCategoryRequest
   ): Promise<CreateExpenseCategoryResponse> {
     return sendRequest("POST", data);
   },

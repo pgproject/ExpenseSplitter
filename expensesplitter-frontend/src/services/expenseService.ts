@@ -13,18 +13,21 @@ import type {
 const ENDPOINT = `${API_URL}/api/expenses`;
 
 async function sendRequest<T>(
-  method: string,
-  data: unknown
+  method: RequestInit["method"],
+  url: string = ENDPOINT,
+  data?: unknown
 ): Promise<T> {
   const token = localStorage.getItem("accessToken");
 
-  const response = await fetch(ENDPOINT, {
+  const response = await fetch(url, {
     method,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(data),
+    ...(data !== undefined && {
+      body: JSON.stringify(data),
+    }),
   });
 
   if (!response.ok) {
@@ -38,52 +41,26 @@ export const expenseService = {
   async create(
     data: CreateExpenseRequest
   ): Promise<CreateExpenseResponse> {
-    return sendRequest("POST", data);
+    return sendRequest("POST", ENDPOINT, data);
   },
 
   async update(
     data: UpdateExpenseRequest
   ): Promise<UpdateExpenseResponse> {
-    return sendRequest("PUT", data);
+    return sendRequest("PUT", ENDPOINT, data);
   },
 
   async remove(
     data: RemoveExpenseRequest
   ): Promise<RemoveExpenseResponse> {
-    return sendRequest("DELETE", data);
+    return sendRequest("DELETE", ENDPOINT, data);
   },
 
   async getAll(): Promise<GetExpensesResponse[]> {
-    const token = localStorage.getItem("accessToken");
-
-    const response = await fetch(ENDPOINT, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Nie udało się pobrać wydatków.");
-    }
-
-    return response.json();
+    return sendRequest("GET");
   },
 
   async getByGroup(groupId: string): Promise<GetExpensesResponse[]> {
-    const token = localStorage.getItem("accessToken");
-
-    const response = await fetch(`${ENDPOINT}/group/${groupId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Nie udało się pobrać wydatków grupy.");
-    }
-
-    return response.json();
+    return sendRequest("GET", `${ENDPOINT}/group/${groupId}`);
   },
 };
